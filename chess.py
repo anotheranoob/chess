@@ -378,6 +378,68 @@ class Main:
             self.isPieceSelected=True
             self.pieceSelected="wrook"
             self.pieceSelectedLocation=ls
+        elif x=="wQueen" and self.turn%2==1:
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a+i][b-i]+" "
+                    if currentString[0]=="b" and b-i>=0:
+                        self.board[a+i][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="w":
+                        break
+                    elif b-i<0:
+                        break
+                    else:
+                        self.board[a+i][b-i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a-i][b-i]+" "
+                    if currentString[0]=="b" and b-i>=0 and a-i>=0:
+                        self.board[a-i][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="w":
+                        break
+                    elif b-i<0:
+                        break
+                    elif a-i<0:
+                        break
+                    else:
+                        self.board[a-i][b-i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a+i][b+i]+" "
+                    if currentString[0]=="b":
+                        self.board[a+i][b+i].config(bg="red")
+                        break
+                    elif currentString[0]=="w":
+                        break
+                    else:
+                        self.board[a+i][b+i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a-i][b+i]+" "
+                    if currentString[0]=="b" and a-i>=0:
+                        self.board[a-i][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="w":
+                        break
+                    elif a-i<0:
+                        break
+                    else:
+                        self.board[a-i][b+i].config(bg="red")
+            except IndexError:
+                pass
+            self.isPieceSelected=True
+            self.pieceSelected="wqueen"
+            self.pieceSelectedLocation=ls
+
+
         elif x=="bRook" and self.turn%2==0:
             try:
                 for i in range(1,8):
@@ -493,6 +555,118 @@ class Main:
                 pass
             self.isPieceSelected=True
             self.pieceSelected="bbishop"
+            self.pieceSelectedLocation=ls
+        if x=="bQueen"
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a][b+i]+" "
+                    if currentString[0]=="w":
+                        self.board[a][b+i].config(bg="red")
+                        break
+                    elif currentString[0]=="b":
+                        break
+                    else:
+                        self.board[a][b+i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a+i][b]+" "
+                    if currentString[0]=="w":
+                        self.board[a+i][b].config(bg="red")
+                        break
+                    elif currentString[0]=="b":
+                        break
+                    else:
+                        self.board[a+i][b].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a-i][b]+" "
+                    if currentString[0]=="w" and a-i>=0:
+                        self.board[a-i][b].config(bg="red")
+                        break
+                    elif currentString[0]=="b" and a-i>=0:
+                        break
+                    elif a-i<0:
+                        break
+                    else:
+                        self.board[a-i][b].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a][b-i]+" "
+                    if currentString[0]=="w" and b-1>=0:
+                        self.board[a][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="b":
+                        break
+                    elif b-i<0:
+                        break
+                    else:
+                        self.board[a][b-i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a+i][b-i]+" "
+                    if currentString[0]=="w" and b-i>=0:
+                        self.board[a+i][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="b":
+                        break
+                    elif b-i<0:
+                        break
+                    else:
+                        self.board[a+i][b-i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a-i][b-i]+" "
+                    if currentString[0]=="w" and b-i>=0 and a-i>=0:
+                        self.board[a-i][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="b":
+                        break
+                    elif b-i<0:
+                        break
+                    elif a-i<0:
+                        break
+                    else:
+                        self.board[a-i][b-i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a+i][b+i]+" "
+                    if currentString[0]=="w":
+                        self.board[a+i][b+i].config(bg="red")
+                        break
+                    elif currentString[0]=="b":
+                        break
+                    else:
+                        self.board[a+i][b+i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a-i][b+i]+" "
+                    if currentString[0]=="w" and a-i>=0:
+                        self.board[a-i][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="b":
+                        break
+                    elif a-i<0:
+                        break
+                    else:
+                        self.board[a-i][b+i].config(bg="red")
+            except IndexError:
+                pass
+            self.isPieceSelected=True
+            self.pieceSelected="wqueen"
             self.pieceSelectedLocation=ls
 
         elif x=="wBishop" and self.turn%2==1:

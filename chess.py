@@ -609,6 +609,10 @@ class Main:
                                 self.board[a+i][b+x].config(bg="red")
                         except IndexError:
                             pass
+            if self.wCastleKingside and self.strboard[5][0]=="" and self.strboard[6][0]=="":
+                self.board[6][0].config(bg="red")
+            if self.wCastleQueenside and self.strboard[2][0]=="" and self.strboard[3][0]=="":
+                self.board[2][0].config(bg="red")                
             self.isPieceSelected=True
             self.pieceSelected="wking"
             self.pieceSelectedLocation=ls
@@ -735,6 +739,10 @@ class Main:
         self.notGameOver=True
         self.turnOver=False
         self.pieceSelectedLocation=None
+        self.wCastleKingside=True
+        self.wCastleQueenside=True
+        self.bCastleKingside=True
+        self.bCastleQueenside=True
         for i in self.board:
             for j in i:
                 j.config(bg="burlywood3")

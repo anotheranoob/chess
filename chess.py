@@ -168,6 +168,9 @@ class Main:
                         exec("self.board[a][b].config(image=self."+self.pieceSelected+")")
                         self.board[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])].config(image=self.blanksquare, height=60, width=60)
                         self.archivedstrboard=self.strboard
+                        if self.pieceSelected=="wking":
+                            self.CastleQueenside=False
+                            self.CastleKingside=False
                         if self.pieceSelected=="wpawn" and b==7:
                             self.wPawnPromotion(a,b)
                         elif self.pieceSelected=="bpawn" and b==0:
@@ -194,6 +197,9 @@ class Main:
                         exec("self.board[a][b].config(image=self."+self.pieceSelected+")")
                         self.board[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])].config(image=self.blanksquare, height=60, width=60)
                         self.archivedstrboard=self.strboard
+                        if self.pieceSelected=="wking":
+                            self.CastleQueenside=False
+                            self.CastleKingside=False
                         if self.pieceSelected=="wpawn" and b==7:
                             self.wPawnPromotion(a,b)
                         elif self.pieceSelected=="bpawn" and b==0:

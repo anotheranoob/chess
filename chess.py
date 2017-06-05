@@ -1,5 +1,6 @@
 from tkinter import *
-#import time
+import time
+import sys
 def generic_button_click(position, root):
     chess.generic_button_click(position, root)
 class Main:
@@ -169,8 +170,24 @@ class Main:
                         self.board[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])].config(image=self.blanksquare, height=60, width=60)
                         self.archivedstrboard=self.strboard
                         if self.pieceSelected=="wking":
-                            self.CastleQueenside=False
-                            self.CastleKingside=False
+                            if a==6 and self.wCastleKingside:
+                                self.strboard[5][0]="wRook"
+                                self.strboard[7][0]=""
+                                self.board[5][0].config(image=self.wrook)
+                                self.board[7][0].config(image=self.blanksquare, width=60, height=60)
+                                self.wCastleQueenside=False
+                                self.wCastleKingside=False
+                            elif a==2 and self.wCastleQueenside:
+                                self.strboard[3][0]="wRook"
+                                self.strboard[0][0]=""
+                                self.board[3][0].config(image=self.wrook)
+                                self.board[0][0].config(image=self.blanksquare, width=60, height=60)
+                                self.wCastleQueenside=False
+                                self.wCastleKingside=False
+                        elif self.pieceSelected=="wrook" and self.pieceSelectedLocation[0]==7 and self.pieceSelectedLocation[1]==0 and self.wCastleKingside==True:
+                            self.wCastleKingside=False
+                        elif self.pieceSelected=="wrook" and self.pieceSelectedLocation[0]==0 and self.pieceSelectedLocation[1]==0 and self.wCastleQueenside==True:
+                            self.wCastleQueenside=False
                         if self.pieceSelected=="wpawn" and b==7:
                             self.wPawnPromotion(a,b)
                         elif self.pieceSelected=="bpawn" and b==0:
@@ -200,6 +217,25 @@ class Main:
                         if self.pieceSelected=="wking":
                             self.CastleQueenside=False
                             self.CastleKingside=False
+                        elif self.pieceSelected=="bking":
+                            if a==6 and self.bCastleKingside:
+                                self.strboard[5][7]="bRook"
+                                self.strboard[7][7]=""
+                                self.board[5][7].config(image=self.brook)
+                                self.board[7][7].config(image=self.blanksquare, width=60, height=60)
+                                self.bCastleQueenside=False
+                                self.bCastleKingside=False
+                            elif a==2 and self.bCastleQueenside:
+                                self.strboard[3][7]="bRook"
+                                self.strboard[0][7]=""
+                                self.board[3][7].config(image=self.brook)
+                                self.board[0][7].config(image=self.blanksquare, width=60, height=60)
+                                self.bCastleQueenside=False
+                                self.bCastleKingside=False
+                        elif self.pieceSelected=="brook" and self.pieceSelectedLocation[0]==7 and self.pieceSelectedLocation[1]==7 and self.bCastleKingside==True:
+                            self.wCastleKingside=False
+                        elif self.pieceSelected=="brook" and self.pieceSelectedLocation[0]==0 and self.pieceSelectedLocation[1]==7 and self.bCastleQueenside==True:
+                            self.wCastleQueenside=False
                         if self.pieceSelected=="wpawn" and b==7:
                             self.wPawnPromotion(a,b)
                         elif self.pieceSelected=="bpawn" and b==0:
@@ -435,6 +471,58 @@ class Main:
                         self.board[a-i][b+i].config(bg="red")
             except IndexError:
                 pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a][b+i]+" "
+                    if currentString[0]=="b":
+                        self.board[a][b+i].config(bg="red")
+                        break
+                    elif currentString[0]=="w":
+                        break
+                    else:
+                        self.board[a][b+i].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a+i][b]+" "
+                    if currentString[0]=="b":
+                        self.board[a+i][b].config(bg="red")
+                        break
+                    elif currentString[0]=="w":
+                        break
+                    else:
+                        self.board[a+i][b].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a-i][b]+" "
+                    if currentString[0]=="b" and a-i>=0:
+                        self.board[a-i][b].config(bg="red")
+                        break
+                    elif currentString[0]=="w" and a-i>=0:
+                        break
+                    elif a-1<0:
+                        break
+                    else:
+                        self.board[a-i][b].config(bg="red")
+            except IndexError:
+                pass
+            try:
+                for i in range(1,8):
+                    currentString=self.strboard[a][b-i]+" "
+                    if currentString[0]=="b" and b-i>=0:
+                        self.board[a][b-i].config(bg="red")
+                        break
+                    elif currentString[0]=="w":
+                        break
+                    elif b-i<0:
+                        break
+                    else:
+                        self.board[a][b-i].config(bg="red")
+            except IndexError:
+                pass
             self.isPieceSelected=True
             self.pieceSelected="wqueen"
             self.pieceSelectedLocation=ls
@@ -556,7 +644,7 @@ class Main:
             self.isPieceSelected=True
             self.pieceSelected="bbishop"
             self.pieceSelectedLocation=ls
-        if x=="bQueen"
+        if x=="bQueen":
             try:
                 for i in range(1,8):
                     currentString=self.strboard[a][b+i]+" "
@@ -666,7 +754,7 @@ class Main:
             except IndexError:
                 pass
             self.isPieceSelected=True
-            self.pieceSelected="wqueen"
+            self.pieceSelected="bqueen"
             self.pieceSelectedLocation=ls
 
         elif x=="wBishop" and self.turn%2==1:
@@ -791,8 +879,8 @@ class Main:
                             pass
             if self.wCastleKingside and self.strboard[5][0]=="" and self.strboard[6][0]=="":
                 self.board[6][0].config(bg="red")
-            if self.wCastleQueenside and self.strboard[2][0]=="" and self.strboard[3][0]=="":
-                self.board[2][0].config(bg="red")                
+            if self.wCastleQueenside and self.strboard[2][0]=="" and self.strboard[3][0]=="" and self.strboared[1][0]=="":
+                self.board[2][0].config(bg="red")
             self.isPieceSelected=True
             self.pieceSelected="wking"
             self.pieceSelectedLocation=ls
@@ -800,7 +888,7 @@ class Main:
         elif x=="bKing" and self.turn%2==0:
             for i in [1,-1,0]:
                 for x in [1,-1,0]:
-                    if i!=0 and x!=0:
+                    if i!=0 or x!=0:
                         try:
                             currentString=self.strboard[a+i][b+x]+" "
                             if currentString[0]=="w" and a+i>=0 and b+x>=0:
@@ -815,18 +903,26 @@ class Main:
                                 self.board[a+i][b+x].config(bg="red")
                         except IndexError:
                             pass
+            if self.bCastleKingside and self.strboard[5][7]=="" and self.strboard[6][7]=="":
+                self.board[6][7].config(bg="red")
+            if self.bCastleQueenside and self.strboard[2][7]=="" and self.strboard[3][7]=="" and self.strboared[1][0]=="":
+                self.board[2][7].config(bg="red")
             self.isPieceSelected=True
             self.pieceSelected="bking"
             self.pieceSelectedLocation=ls
 
         else:
-            print(x)
-            print(str(a)+str(b))
+            pass
     def do_move(self, root):
         for i in range(8):
             for x in range(8):
                 self.board[i][x].grid_forget()
         if self.turn%2==1:
+            if self.b_won(root):
+                self.winMessage.config(text="Black Wins!!!")
+                self.winMessage.pack()
+                sys.exit()
+                time.sleep(3)
             for i in range(8):
                 for x in range(8):
                     self.board[i][x].grid(column=i, row=7-x)
@@ -837,10 +933,28 @@ class Main:
                     else:
                         exec("self.board["+str(i)+"]["+str(x)+"].config(command=lambda: generic_button_click(str("+str(i)+str(x)+"),root))")
         elif self.turn%2==0:
+            if self.w_won(root):
+                self.winMessage.config(text="White Wins!!!")
+                self.winMessage.pack()
+                sys.exit()
+                time.sleep(3)
             for i in range(8):
                 for x in range(8):
                     self.board[i][x].grid(column=7-i, row=x)
 
+    def b_won(self,root):
+        for i in range(8):
+            for x in range(8):
+                if self.strboard[i][x]=="wKing":
+                    return False
+        return True
+    
+    def w_won(self,root):
+        for i in range(8):
+            for x in range(8):
+                if self.strboard[i][x]=="bKing":
+                    return False
+        return True
     def __init__(self, root):
         self.wpawn=PhotoImage(file="w_pawn.gif")
         self.wrook=PhotoImage(file="w_rook.gif")
@@ -848,6 +962,8 @@ class Main:
         self.wknight=PhotoImage(file="w_knight.gif")
         self.wking=PhotoImage(file="w_king.gif")
         self.wqueen=PhotoImage(file="w_queen.gif")
+
+        self.winMessage=Label(root)
         
         self.bpawn=PhotoImage(file="b_pawn.gif")
         self.brook=PhotoImage(file="b_rook.gif")

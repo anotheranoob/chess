@@ -166,6 +166,9 @@ class Main:
                             for j in i:
                                 j.config(bg="burlywood3")
                     else:
+                        if self.pieceSelected="wPawn" and self.pieceSelectedLocation[1]==1 and self.b==3:
+                            self.enPassant=str(a)+str(b)
+                            self.enPassantColor="w"
                         exec("self.board[a][b].config(image=self."+self.pieceSelected+")")
                         self.board[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])].config(image=self.blanksquare, height=60, width=60)
                         self.archivedstrboard=self.strboard
@@ -211,6 +214,9 @@ class Main:
                             for j in i:
                                 j.config(bg="burlywood3")
                     else:
+                        if self.pieceSelected="bPawn" and self.pieceSelectedLocation[1]==1 and self.b==3:
+                            self.enPassant=str(a)+str(b)
+                            self.enPassantColor="b"
                         exec("self.board[a][b].config(image=self."+self.pieceSelected+")")
                         self.board[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])].config(image=self.blanksquare, height=60, width=60)
                         self.archivedstrboard=self.strboard
@@ -1039,6 +1045,8 @@ class Main:
         self.wCastleQueenside=True
         self.bCastleKingside=True
         self.bCastleQueenside=True
+        self.enPassant=None
+        self.enPassantColor=None
         for i in self.board:
             for j in i:
                 j.config(bg="burlywood3")

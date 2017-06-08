@@ -152,7 +152,6 @@ class Main:
         a=int(ls[0])
         b=int(ls[1])
         x=self.strboard[a][b]
-        self.archivedstrboard=self.strboard
         if self.isPieceSelected==True:
             if self.board[a][b].cget('bg')=="red":
                 self.strboard[a][b]=self.pieceSelected[0]+self.pieceSelected[1].upper()+self.pieceSelected[2:]
@@ -167,9 +166,9 @@ class Main:
                             for j in i:
                                 j.config(bg="burlywood3")
                     else:
-                        if self.pieceSelected=="wpawn" and self.pieceSelectedLocation[1]=='1' and b==3:
+                        '''if self.pieceSelected=="wPawn" and self.pieceSelectedLocation[1]==1 and self.b==3:
                             self.enPassant=str(a)+str(b)
-                            self.enPassantColor="w"
+                            self.enPassantColor="w"'''
                         exec("self.board[a][b].config(image=self."+self.pieceSelected+")")
                         self.board[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])].config(image=self.blanksquare, height=60, width=60)
                         self.archivedstrboard=self.strboard
@@ -207,22 +206,17 @@ class Main:
                             self.do_move(root)
                 elif self.turn%2 ==0:
                     if self.bKingInCheck():
-                        self.strboard=self.archivedstrboard
+                        self.strboard[a][b]=self.archivedstrboard[a][b]
+                        self.strboard[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])]=self.pieceSelected[0]+self.pieceSelected[1].upper()+self.pieceSelected[2:]
                         self.isPieceSelected=False
                         self.pieceSelected=None
                         for i in self.board:
                             for j in i:
                                 j.config(bg="burlywood3")
                     else:
-                        if self.pieceSelected=="bpawn" and self.pieceSelectedLocation[1]=='6' and b==4:
+                        '''if self.pieceSelected=="bPawn" and self.pieceSelectedLocation[1]==1 and self.b==3:
                             self.enPassant=str(a)+str(b)
-                            self.enPassantColor="b"
-                        if self.pieceSelected=="bpawn" and self.pieceSelectedLocation[0]!=a and x=="":
-                            self.board[a][b-1].config(image=self.blanksquare, width=60, height=60, bg="green")
-                        print(a)
-                        print(self.pieceSelectedLocation[0])
-                        print(self.archivedstrboard[a][b])
-                        print(self.strboard)
+                            self.enPassantColor="b"'''
                         exec("self.board[a][b].config(image=self."+self.pieceSelected+")")
                         self.board[int(self.pieceSelectedLocation[0])][int(self.pieceSelectedLocation[1])].config(image=self.blanksquare, height=60, width=60)
                         self.archivedstrboard=self.strboard
@@ -276,7 +270,13 @@ class Main:
                         self.board[a][b+1].config(bg="red")
                         self.board[a][b+2].config(bg="red")
                 except (TypeError, IndexError):
-                    pass                
+                    pass
+                try:
+                    if "b" in self.strboard[a+1][b+1] and "b" in self.strboard[a-1][b+1] and a-1>=0:
+                        self.board[a+1][b+1].config(bg="red")
+                        self.board[a-1][b+1].config(bg="red")
+                except (TypeError, IndexError):
+                    pass
                 try:
                     if "b" in self.strboard[a+1][b+1]:
                         self.board[a+1][b+1].config(bg="red")
@@ -293,22 +293,18 @@ class Main:
                 else:
                     self.board[a][b+1].config(bg="red")
                 try:
+                    if "b" in self.strboard[a+1][b+1] and "b" in self.strboard[a-1][b+1]:
+                        self.board[a+1][b+1].config(bg="red")
+                        self.board[a-1][b+1].config(bg="red")
+                except (TypeError, IndexError):
+                    pass
+                try:
                     if "b" in self.strboard[a+1][b+1]:
                         self.board[a+1][b+1].config(bg="red")
                 except (TypeError, IndexError):
                     pass
                 try:
                     if "b" in self.strboard[a-1][b+1]:
-                        self.board[a-1][b+1].config(bg="red")
-                except (TypeError, IndexError):
-                    pass
-                try:
-                    if self.enPassantColor=="b" and a+1==int(self.enPassant[0]) and b==int(self.enPassant[1]):
-                        self.board[a+1][b+1].config(bg="red")
-                except (TypeError, IndexError):
-                    pass
-                try:
-                    if self.enPassantColor=="b" and a-1==int(self.enPassant[0]) and b==int(self.enPassant[1]) and a-1>0:
                         self.board[a-1][b+1].config(bg="red")
                 except (TypeError, IndexError):
                     pass
@@ -325,6 +321,12 @@ class Main:
                     else:
                         self.board[a][b-1].config(bg="red")
                         self.board[a][b-2].config(bg="red")
+                except (TypeError, IndexError):
+                    pass
+                try:
+                    if "w" in self.strboard[a-1][b-1] and "w" in self.strboard[a-1][b-1] and a-1>=0 and not(self.strboard[a+1][b-1]=="bPawn") and not(self.strboard[a-1][b-1]=="bPawn"):
+                        self.board[a+1][b-1].config(bg="red")
+                        self.board[a-1][b-1].config(bg="red")
                 except (TypeError, IndexError):
                     pass
                 try:
@@ -358,16 +360,7 @@ class Main:
                         self.board[a-1][b-1].config(bg="red")
                 except (TypeError, IndexError):
                     pass
-                try:
-                    if self.enPassantColor=="w" and a+1==int(self.enPassant[0]) and b==int(self.enPassant[1]):
-                        self.board[a+1][b-1].config(bg="red")
-                except (TypeError, IndexError):
-                    pass
-                try:
-                    if self.enPassantColor=="w" and a-1==int(self.enPassant[0]) and b==int(self.enPassant[1]) and a-1>0:
-                        self.board[a-1][b-1].config(bg="red")
-                except (TypeError, IndexError):
-                    pass
+            
             self.isPieceSelected=True
             self.pieceSelected="bpawn"
             self.pieceSelectedLocation=ls

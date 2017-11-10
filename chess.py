@@ -3,151 +3,18 @@ import time
 import sys
 def generic_button_click(position, root):
     chess.generic_button_click(position, root)
-class Main:
-    def noMoves(self):
-        for i in range(8):
-            for x in range(8):
-                if self.board[i][x].cget('bg')=="red":
-                    return False
-        return True
-
-    def bPawnKnight(self):
-        self.board[self.a][self.b].config(image=self.bknight)
-        self.strboard[self.a][self.b]="bKnight"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
-
-    def bPawnBishop(self):
-        self.board[self.a][self.b].config(image=self.bbishop)
-        self.strboard[self.a][self.b]="bBishop"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
-
-    def bPawnQueen(self):
-        self.board[self.a][self.b].config(image=self.bqueen)
-        self.strboard[self.a][self.b]="bQueen"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
-
-    def bPawnRook(self):
-        self.board[self.a][self.b].config(image=self.brook)
-        self.strboard[self.a][self.b]="bRook"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
-
-    def wPawnKnight(self):
-        self.board[self.a][self.b].config(image=self.wknight)
-        self.strboard[self.a][self.b]="wKnight"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
+class ChessPiece(Label):
+    def __init__(self, master, pieceName, pieceImage, position):
+        Label.__init__(master, image=pieceImage, height=60, width=60)
+        self.bind("<Button-1>", master.chessCallback)
+        self.position=position
+        self.pieceName=pieceName
+        self.master=master
         
-    def wPawnBishop(self):
-        self.board[self.a][self.b].config(image=self.wbishop)
-        self.strboard[self.a][self.b]="wBishop"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
 
-    def wPawnQueen(self):
-        self.board[self.a][self.b].config(image=self.wqueen)
-        self.strboard[self.a][self.b]="wQueen"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
-
-    def wPawnRook(self):
-        self.board[self.a][self.b].config(image=self.wrook)
-        self.strboard[self.a][self.b]="wRook"
-        self.promotionWindow.destroy()
-        for i in self.board:
-            for j in i:
-                j.config(bg="burlywood3")
-        self.isPieceSelected=False
-        self.pieceSelected=None
-        self.turnOver=True
-        self.turn+=1
-        self.do_move(root)
-
-    def wPawnPromotion(self, a, b):
-        self.promotionWindow=Toplevel()
-        self.promotionWindow.wm_title("Promotion")
-        self.promotionGrid=[]
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.wqueen, command=self.wPawnQueen))
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.wrook, command=self.wPawnRook))
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.wbishop, command=self.wPawnBishop))
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.wknight, command=self.wPawnKnight))
-        self.a=a
-        self.b=b
-        for i in range(4):
-            self.promotionGrid[i].grid(column=i, row=0)
-
-    def bPawnPromotion(self, a, b):
-        self.promotionWindow=Toplevel()
-        self.promotionWindow.wm_title("Promotion")
-        self.a=a
-        self.b=b
-        self.promotionGrid=[]
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.bqueen, command=self.bPawnQueen))
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.brook, command=self.bPawnRook))
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.bbishop, command=self.bPawnBishop))
-        self.promotionGrid.append(Button(self.promotionWindow, image=self.bknight, command=self.bPawnKnight))
-        for i in range(4):
-            self.promotionGrid[i].grid(column=i, row=0)
-
-    def wKingInCheck(self):
-        return False
-
-    def bKingInCheck(self):
-        return False
-
-    def generic_button_click(self, position, root):
+class ChessGame(Frame):
+    def chessCallback(self, event):
+        ls=list(event.position)
         ls=list(position)
         a=int(ls[0])
         b=int(ls[1])
@@ -203,7 +70,7 @@ class Main:
                             self.pieceSelected=None
                             self.turnOver=True
                             self.turn+=1
-                            self.do_move(root)
+                            self.do_move(self.root)
                 elif self.turn%2 ==0:
                     if self.bKingInCheck():
                         self.strboard[a][b]=self.archivedstrboard[a][b]
@@ -885,7 +752,7 @@ class Main:
                             pass
             if self.wCastleKingside and self.strboard[5][0]=="" and self.strboard[6][0]=="":
                 self.board[6][0].config(bg="red")
-            if self.wCastleQueenside and self.strboard[2][0]=="" and self.strboard[3][0]=="" and self.strboared[1][0]=="":
+            if self.wCastleQueenside and self.strboard[2][0]=="" and self.strboard[3][0]=="" and self.strboard[1][0]=="":
                 self.board[2][0].config(bg="red")
             self.isPieceSelected=True
             self.pieceSelected="wking"
@@ -911,7 +778,7 @@ class Main:
                             pass
             if self.bCastleKingside and self.strboard[5][7]=="" and self.strboard[6][7]=="":
                 self.board[6][7].config(bg="red")
-            if self.bCastleQueenside and self.strboard[2][7]=="" and self.strboard[3][7]=="" and self.strboared[1][0]=="":
+            if self.bCastleQueenside and self.strboard[2][7]=="" and self.strboard[3][7]=="" and self.strboard[1][0]=="":
                 self.board[2][7].config(bg="red")
             self.isPieceSelected=True
             self.pieceSelected="bking"
@@ -919,49 +786,10 @@ class Main:
 
         else:
             pass
-    def do_move(self, root):
-        for i in range(8):
-            for x in range(8):
-                self.board[i][x].grid_forget()
-        if self.turn%2==1:
-            if self.b_won(root):
-                self.winMessage.config(text="Black Wins!!!")
-                self.winMessage.pack()
-                sys.exit()
-                time.sleep(3)
-            for i in range(8):
-                for x in range(8):
-                    self.board[i][x].grid(column=i, row=7-x)
-            for i in range(8):
-                for x in range(8):
-                    if i==0:
-                        exec("self.board["+str(i)+"]["+str(x)+"].config(command=lambda: generic_button_click('0'+str("+str(x)+"),root))")
-                    else:
-                        exec("self.board["+str(i)+"]["+str(x)+"].config(command=lambda: generic_button_click(str("+str(i)+str(x)+"),root))")
-        elif self.turn%2==0:
-            if self.w_won(root):
-                self.winMessage.config(text="White Wins!!!")
-                self.winMessage.pack()
-                sys.exit()
-                time.sleep(3)
-            for i in range(8):
-                for x in range(8):
-                    self.board[i][x].grid(column=7-i, row=x)
 
-    def b_won(self,root):
-        for i in range(8):
-            for x in range(8):
-                if self.strboard[i][x]=="wKing":
-                    return False
-        return True
-    
-    def w_won(self,root):
-        for i in range(8):
-            for x in range(8):
-                if self.strboard[i][x]=="bKing":
-                    return False
-        return True
+
     def __init__(self, root):
+        Frame.__init__(root)
         self.wpawn=PhotoImage(file="w_pawn.gif")
         self.wrook=PhotoImage(file="w_rook.gif")
         self.wbishop=PhotoImage(file="w_bishop.gif")
@@ -969,8 +797,9 @@ class Main:
         self.wking=PhotoImage(file="w_king.gif")
         self.wqueen=PhotoImage(file="w_queen.gif")
 
-        self.winMessage=Label(root)
-        
+        self.root=root
+        self.winMessage=Label(root)        
+
         self.bpawn=PhotoImage(file="b_pawn.gif")
         self.brook=PhotoImage(file="b_rook.gif")
         self.bbishop=PhotoImage(file="b_bishop.gif")
@@ -984,9 +813,10 @@ class Main:
             for x in range(8):
                 self.board[i][x]=Button(root)
                 self.board[i][x].config(image=self.blanksquare, height=60, width=60)
+                self.board[i][x]=ChessPiece(self, "",  self.blanksquare, [i,x])
         for i in range(8):
             self.board[i][1]=Button(root)
-            self.board[i][1].config(image=self.wpawn, command=lambda: self.generic_button_click())
+            self.board[i][1].config(image=self.wpawn, command=self.generic_button_click)
             self.strboard[i][1]="wPawn"
         for i in [0,7]:
             for x in [0]:
@@ -1052,7 +882,187 @@ class Main:
                 j.config(bg="burlywood3")
 #        while self.notGameOver:
         self.do_move(root)
+    def noMoves(self):
+        for i in range(8):
+            for x in range(8):
+                if self.board[i][x].cget('bg')=="red":
+                    return False
+        return True
+
+    def bPawnKnight(self):
+        self.board[self.a][self.b].config(image=self.bknight)
+        self.strboard[self.a][self.b]="bKnight"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+
+    def bPawnBishop(self):
+        self.board[self.a][self.b].config(image=self.bbishop)
+        self.strboard[self.a][self.b]="bBishop"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+
+    def bPawnQueen(self):
+        self.board[self.a][self.b].config(image=self.bqueen)
+        self.strboard[self.a][self.b]="bQueen"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+
+    def bPawnRook(self):
+        self.board[self.a][self.b].config(image=self.brook)
+        self.strboard[self.a][self.b]="bRook"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+
+    def wPawnKnight(self):
+        self.board[self.a][self.b].config(image=self.wknight)
+        self.strboard[self.a][self.b]="wKnight"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+        
+    def wPawnBishop(self):
+        self.board[self.a][self.b].config(image=self.wbishop)
+        self.strboard[self.a][self.b]="wBishop"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+
+    def wPawnQueen(self):
+        self.board[self.a][self.b].config(image=self.wqueen)
+        self.strboard[self.a][self.b]="wQueen"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+
+    def wPawnRook(self):
+        self.board[self.a][self.b].config(image=self.wrook)
+        self.strboard[self.a][self.b]="wRook"
+        self.promotionWindow.destroy()
+        for i in self.board:
+            for j in i:
+                j.config(bg="burlywood3")
+        self.isPieceSelected=False
+        self.pieceSelected=None
+        self.turnOver=True
+        self.turn+=1
+        self.do_move(root)
+
+    def wPawnPromotion(self, a, b):
+        self.promotionWindow=Toplevel()
+        self.promotionWindow.wm_title("Promotion")
+        self.promotionGrid=[]
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.wqueen, command=self.wPawnQueen))
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.wrook, command=self.wPawnRook))
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.wbishop, command=self.wPawnBishop))
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.wknight, command=self.wPawnKnight))
+        self.a=a
+        self.b=b
+        for i in range(4):
+            self.promotionGrid[i].grid(column=i, row=0)
+
+    def bPawnPromotion(self, a, b):
+        self.promotionWindow=Toplevel()
+        self.promotionWindow.wm_title("Promotion")
+        self.a=a
+        self.b=b
+        self.promotionGrid=[]
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.bqueen, command=self.bPawnQueen))
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.brook, command=self.bPawnRook))
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.bbishop, command=self.bPawnBishop))
+        self.promotionGrid.append(Button(self.promotionWindow, image=self.bknight, command=self.bPawnKnight))
+        for i in range(4):
+            self.promotionGrid[i].grid(column=i, row=0)
+
+    def wKingInCheck(self):
+        return False
+
+    def bKingInCheck(self):
+        return False
+    def do_move(self, root):
+        for i in range(8):
+            for x in range(8):
+                self.board[i][x].grid_forget()
+        if self.turn%2==1:
+            if self.b_won(root):
+                self.winMessage.config(text="Black Wins!!!")
+                self.winMessage.pack()
+            for i in range(8):
+                for x in range(8):
+                    self.board[i][x].grid(column=i, row=7-x)
+            for i in range(8):
+                for x in range(8):
+                    if i==0:
+                        exec("self.board["+str(i)+"]["+str(x)+"].config(command=lambda: generic_button_click('0'+str("+str(x)+"),root))")
+                    else:
+                        exec("self.board["+str(i)+"]["+str(x)+"].config(command=lambda: generic_button_click(str("+str(i)+str(x)+"),root))")
+        elif self.turn%2==0:
+            if self.w_won(root):
+                self.winMessage.config(text="White Wins!!!")
+                self.winMessage.pack()
+            for i in range(8):
+                for x in range(8):
+                    self.board[i][x].grid(column=7-i, row=x)
+
+    def b_won(self,root):
+        for i in range(8):
+            for x in range(8):
+                if self.strboard[i][x]=="wKing":
+                    return False
+        return True
+    
+    def w_won(self,root):
+        for i in range(8):
+            for x in range(8):
+                if self.strboard[i][x]=="bKing":
+                    return False
+        return True
 root=Tk()
 root.wm_title("Chess Game")
-chess=Main(root)
+chess=ChessGame(root)
 root.mainloop()

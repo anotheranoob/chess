@@ -89,8 +89,10 @@ class ChessGrid(Frame):
                     self.board[i][x].grid_forget()
                     self.board[i][x].grid(row=x, column=i)
 
-    def set_up_board(self):
-        pass
+    def set_up_board(self, strboard):
+        for i in range(8):
+            for x in range(8):
+                ["wRook", "wPawn", "wBishop", "wKnight", "wKing", "wQueen", "bRook", "bPawn", "bBishop", "bKnight", "bKing", "bQueen"]
 
 
 bob = Tk()

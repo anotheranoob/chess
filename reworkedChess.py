@@ -74,6 +74,10 @@ class ChessGrid(Frame):
         for i in self.board:
             for j in i:
                 j.config(bg="burlywood3")
+        for i in [0,2,4,6]:
+            for x in [0,2,4,6]:
+                self.board[i][x].config(bg="sienna4")
+                self.board[i+1][x+1].config(bg="sienna4")
         self.turn = 0
 
     def flip(self):

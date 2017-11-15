@@ -657,7 +657,7 @@ class Main:
             self.isPieceSelected=True
             self.pieceSelected="bbishop"
             self.pieceSelectedLocation=ls
-        if x=="bQueen":
+        elif x=="bQueen" and self.turn%2==0:
             try:
                 for i in range(1,8):
                     currentString=self.strboard[a][b+i]+" "

@@ -4,7 +4,7 @@ from tkinter import *
 class ChessPiece(Label):
     def __init__(self, master, pieceName, pieceImage, position):
         Label.__init__(self, master, image=pieceImage, height=60, width=60)
-        self.bind("<Button-1>", self.printName)
+        self.bind("<Button-1>", self.print_name)
         self.position = position
         self.pieceName = pieceName
         self.master = master
@@ -74,10 +74,10 @@ class ChessGrid(Frame):
         for i in self.board:
             for j in i:
                 j.config(bg="burlywood3")
-        for i in [0,2,4,6]:
-            for x in [0,2,4,6]:
+        for i in [0, 2, 4, 6]:
+            for x in [0, 2, 4, 6]:
                 self.board[i][x].config(bg="sienna4")
-                self.board[i+1][x+1].config(bg="sienna4")
+                self.board[i + 1][x + 1].config(bg="sienna4")
         self.turn = 0
 
     def flip(self):
@@ -87,16 +87,35 @@ class ChessGrid(Frame):
                 for x in range(8):
                     self.board[i][x].grid_forget()
                     self.board[i][x].grid(row=7 - x, column=i)
+            for i in self.board:
+                for j in i:
+                    j.config(bg="burlywood3")
+            for i in [0, 2, 4, 6]:
+                for x in [0, 2, 4, 6]:
+                    self.board[i][x].config(bg="sienna4")
+                    self.board[i + 1][x + 1].config(bg="sienna4")
         elif self.turn == 1:
             for i in range(8):
                 for x in range(8):
                     self.board[i][x].grid_forget()
                     self.board[i][x].grid(row=x, column=i)
+            for i in self.board:
+                for j in i:
+                    j.config(bg="sienna4")
+            for i in [0, 2, 4, 6]:
+                for x in [0, 2, 4, 6]:
+                    self.board[i][x].config(bg="burlywood3")
+                    self.board[i + 1][x + 1].config(bg="burlywood3")
 
     def set_up_board(self, strboard):
         for i in range(8):
             for x in range(8):
-                ["wRook", "wPawn", "wBishop", "wKnight", "wKing", "wQueen", "bRook", "bPawn", "bBishop", "bKnight", "bKing", "bQueen"]
+                self.board[i][x].config(image=
+                                        [self.wrook, self.wpawn, self.wbishop, self.wknight, self.wking, self.wqueen,
+                                         self.brook, self.bbishop, self.bknight, self.bking, self.bqueen][
+                                            ["wRook", "wPawn", "wBishop", "wKnight", "wKing", "wQueen",
+                                             "bRook", "bPawn", "bBishop", "bKnight", "bKing", "bQueen"].index(
+                                                strboard[i][x])])
 
 
 bob = Tk()

@@ -4,7 +4,7 @@ from tkinter import *
 class ChessPiece(Label):
     def __init__(self, master, pieceName, pieceImage, position):
         Label.__init__(self, master, image=pieceImage, height=60, width=60)
-        self.bind("<Button-1>", self.print_name)
+        self.bind("<Button-1>", self.master.master.get_click)
         self.position = position
         self.pieceName = pieceName
         self.master = master
@@ -116,11 +116,136 @@ class ChessGrid(Frame):
                                             ["wRook", "wPawn", "wBishop", "wKnight", "wKing", "wQueen",
                                              "bRook", "bPawn", "bBishop", "bKnight", "bKing", "bQueen"].index(
                                                 strboard[i][x])])
-
-
+class ChessFrame(Frame):
+    def __init__(self, master):
+        Frame.__init__(self)
+        self.tkGrid = ChessGrid(self)
+        self.tkGrid.pack()
+        self.turnColor = 0
+    def get_click(self, event):
+        self.tkGrid.flip()
+    def find_moves(self, pos):
+        pass
+    def pawn_moves(self, pos):
+        possible_moves=[]
+        if self.turnColor == 1:
+            try:
+                if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
+                    pass
+                elif "b" in self.strboard[a][b + 2] or "w" in self.strboard[a][b + 2]:
+                    possible_moves.append([a,b + 1])
+                else:
+                    possible_moves.extend([[a,b + 1], [a,b+2]])
+            except (TypeError, IndexError):
+                pass
+            try:
+                if "b" in self.strboard[a + 1][b + 1] and "b" in self.strboard[a - 1][b + 1] and a - 1 >= 0:
+                    possible_moves.append([a + 1,b + 1])
+                    possible_moves.append([a - 1,b + 1])
+            except (TypeError, IndexError):
+                pass
+            try:
+                if "b" in self.strboard[a + 1][b + 1]:
+                    possible_moves.append([a+1,b+1])
+            except (TypeError, IndexError):
+                pass
+            try:
+                if "b" in self.strboard[a - 1][b + 1] and a - 1 >= 0:
+                    possible_moves.append([a-1, b+1])
+            except (TypeError, IndexError):
+                pass
+        else:
+            if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
+                pass
+            else:
+                possible_moves.append([a, b+1])
+            try:
+                if "b" in self.strboard[a + 1][b + 1] and "b" in self.strboard[a - 1][b + 1]:
+                    possible_moves.extend([[a+1, b+1], [a-1, b+1]])
+            except (TypeError, IndexError):
+                pass
+            try:
+                if "b" in self.strboard[a + 1][b + 1]:
+                    possible_moves.append([a+1,b+1])
+            except (TypeError, IndexError):
+                pass
+            try:
+                if "b" in self.strboard[a - 1][b + 1]:
+                    possible_moves.append([a-1,b+1])
+            except (TypeError, IndexError):
+                pass
+        return possible_moves
+    def bishop_moves(self, pos):
+        possible_moves=[]
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a + i][b - i] + " "
+                if currentString[0] == "b" and b - i >= 0:
+                    possible_moves.append([a+i,b-i])
+                    break
+                elif currentString[0] == "w":
+                    break
+                elif b - i < 0:
+                    break
+                else:
+                    possible_moves.append([a+i,b-i])
+        except IndexError:
+            pass
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a - i][b - i] + " "
+                if currentString[0] == "b" and b - i >= 0 and a - i >= 0:
+                    possible_moves.append([a-i,b-i])
+                    break
+                elif currentString[0] == "w":
+                    break
+                elif b - i < 0:
+                    break
+                elif a - i < 0:
+                    break
+                else:
+                    possible_moves.append([a-i, b-i])
+        except IndexError:
+            pass
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a + i][b + i] + " "
+                if currentString[0] == "b":
+                    possible_moves.append([a+i,b+i])
+                    break
+                elif currentString[0] == "w":
+                    break
+                else:
+                    possible_moves.append([a+i,b+i])
+        except IndexError:
+            pass
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a - i][b + i] + " "
+                if currentString[0] == "b" and a - i >= 0:
+                    self.board[a - i][b - i].config(bg="red")
+                    break
+                elif currentString[0] == "w":
+                    break
+                elif a - i < 0:
+                    break
+                else:
+                    self.board[a - i][b + i].config(bg="red")
+        except IndexError:
+            pass
+        return possible_moves
+    def knight_moves(self, pos):
+        pass
+    def rook_moves(self, pos):
+        pass
+    def queen_moves(self, pos):
+        pass
+    def king_moves(self, pos):
+        pass
+    
 bob = Tk()
-chessGrid = ChessGrid(bob)
-chessGrid.pack()
+chessFrame = ChessFrame(bob)
+chessFrame.pack()
 bob.mainloop()
 
 '''

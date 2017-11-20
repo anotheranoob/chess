@@ -128,6 +128,8 @@ class ChessFrame(Frame):
         pass
     def pawn_moves(self, pos):
         possible_moves=[]
+        a=pos[0]
+        b=pos[1]
         if self.turnColor == 1:
             try:
                 if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
@@ -175,10 +177,13 @@ class ChessFrame(Frame):
             except (TypeError, IndexError):
                 pass
         return possible_moves
-    
     def bishop_moves(self, pos):
         possible_moves=[]
-        #Note, this only can handle white pieces.
+        #Note, this currently only works for white pieces.
+        a=pos[0]
+        b=pos[1]
+        colors=["w", "b"]
+        self.strboard
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a + i][b - i] + " "

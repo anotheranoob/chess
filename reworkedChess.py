@@ -175,8 +175,10 @@ class ChessFrame(Frame):
             except (TypeError, IndexError):
                 pass
         return possible_moves
+    
     def bishop_moves(self, pos):
         possible_moves=[]
+        #Note, this only can handle white pieces.
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a + i][b - i] + " "

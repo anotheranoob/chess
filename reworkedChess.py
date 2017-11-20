@@ -122,10 +122,13 @@ class ChessFrame(Frame):
         self.tkGrid = ChessGrid(self)
         self.tkGrid.pack()
         self.turnColor = 0
+        self.strboard=[[['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook'], ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'], ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'], ['wQueen', 'wPawn', '', '', '', '', 'bPawn', 'bQueen'], ['wKing', 'wPawn', '', '', '', '', 'bPawn', 'bKing'], ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'], ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'], ['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook']]]
+        
     def get_click(self, event):
         self.tkGrid.flip()
     def find_moves(self, pos):
-        pass
+        if self.strboard[pos[0]][pos[1]][1:]=="Pawn":
+            
     def pawn_moves(self, pos):
         possible_moves=[]
         a=pos[0]
@@ -183,14 +186,15 @@ class ChessFrame(Frame):
         a=pos[0]
         b=pos[1]
         colors=["w", "b"]
-        self.strboard
+        pieceColor = self.strboard[a][b][0]
+        oppositePieceColor = colors[1-colors.index[pieceColor]]
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a + i][b - i] + " "
-                if currentString[0] == "b" and b - i >= 0:
+                if currentString[0] == oppositePieceColor and b - i >= 0:
                     possible_moves.append([a+i,b-i])
                     break
-                elif currentString[0] == "w":
+                elif currentString[0] == pieceColor:
                     break
                 elif b - i < 0:
                     break
@@ -230,14 +234,14 @@ class ChessFrame(Frame):
             for i in range(1, 8):
                 currentString = self.strboard[a - i][b + i] + " "
                 if currentString[0] == "b" and a - i >= 0:
-                    self.board[a - i][b - i].config(bg="red")
+                    possible_moves.append([a-i,b-i])
                     break
                 elif currentString[0] == "w":
                     break
                 elif a - i < 0:
                     break
                 else:
-                    self.board[a - i][b + i].config(bg="red")
+                    possible_moves.append([a-i,b+i])
         except IndexError:
             pass
         return possible_moves

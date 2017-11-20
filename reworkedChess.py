@@ -127,8 +127,10 @@ class ChessFrame(Frame):
     def get_click(self, event):
         self.tkGrid.flip()
     def find_moves(self, pos):
-        if self.strboard[pos[0]][pos[1]][1:]=="Pawn":
-            
+        pieceName=(self.strboard[pos[0]][pos[1]]+" ")[1:]
+        if pieceName=="Pawn":
+            for i in pawn_moves(pos):
+                pass
     def pawn_moves(self, pos):
         possible_moves=[]
         a=pos[0]

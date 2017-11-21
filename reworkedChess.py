@@ -272,19 +272,19 @@ class ChessFrame(Frame):
             for i in range(1, 8):
                 currentString = self.strboard[a][b + i] + " "
                 if currentString[0] == "b":
-                    self.board[a][b + i].config(bg="red")
+                    possible_moves.append([a,b+i])
                     break
                 elif currentString[0] == "w":
                     break
                 else:
-                    self.board[a][b + i].config(bg="red")
+                    possible_moves.append([a,b+i])
         except IndexError:
             pass
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a + i][b] + " "
                 if currentString[0] == "b":
-                    self.board[a + i][b].config(bg="red")
+                    possible_moves.append([a+i,b])
                     break
                 elif currentString[0] == "w":
                     break

@@ -196,7 +196,6 @@ class ChessFrame(Frame):
 
     def bishop_moves(self, pos):
         possible_moves = []
-        # Note, this currently only works for white pieces.
         a = pos[0]
         b = pos[1]
         colors = ["w", "b"]
@@ -264,8 +263,64 @@ class ChessFrame(Frame):
         pass
 
     def rook_moves(self, pos):
-        pass
-
+        possible_moves=[]
+        #STILL NEEDS FIXING
+        a = pos[0]
+        b = pos[1]
+        colors = ["w", "b"]        
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a][b + i] + " "
+                if currentString[0] == "b":
+                    self.board[a][b + i].config(bg="red")
+                    break
+                elif currentString[0] == "w":
+                    break
+                else:
+                    self.board[a][b + i].config(bg="red")
+        except IndexError:
+            pass
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a + i][b] + " "
+                if currentString[0] == "b":
+                    self.board[a + i][b].config(bg="red")
+                    break
+                elif currentString[0] == "w":
+                    break
+                else:
+                    self.board[a + i][b].config(bg="red")
+        except IndexError:
+            pass
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a - i][b] + " "
+                if currentString[0] == "b" and a - i >= 0:
+                    self.board[a - i][b].config(bg="red")
+                    break
+                elif currentString[0] == "w" and a - i >= 0:
+                    break
+                elif a - 1 < 0:
+                    break
+                else:
+                    self.board[a - i][b].config(bg="red")
+        except IndexError:
+            pass
+        try:
+            for i in range(1, 8):
+                currentString = self.strboard[a][b - i] + " "
+                if currentString[0] == "b" and b - i >= 0:
+                    self.board[a][b - i].config(bg="red")
+                    break
+                elif currentString[0] == "w":
+                    break
+                elif b - i < 0:
+                    break
+                else:
+                    self.board[a][b - i].config(bg="red")
+        except IndexError:
+            pass
+        return possible_moves
     def queen_moves(self, pos):
         pass
 

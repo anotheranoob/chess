@@ -116,146 +116,163 @@ class ChessGrid(Frame):
                                             ["wRook", "wPawn", "wBishop", "wKnight", "wKing", "wQueen",
                                              "bRook", "bPawn", "bBishop", "bKnight", "bKing", "bQueen"].index(
                                                 strboard[i][x])])
+
+
 class ChessFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self)
         self.tkGrid = ChessGrid(self)
         self.tkGrid.pack()
         self.turnColor = 0
-        self.strboard=[[['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook'], ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'], ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'], ['wQueen', 'wPawn', '', '', '', '', 'bPawn', 'bQueen'], ['wKing', 'wPawn', '', '', '', '', 'bPawn', 'bKing'], ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'], ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'], ['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook']]]
-        
+        self.strboard = [[['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook'],
+                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
+                          ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
+                          ['wQueen', 'wPawn', '', '', '', '', 'bPawn', 'bQueen'],
+                          ['wKing', 'wPawn', '', '', '', '', 'bPawn', 'bKing'],
+                          ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
+                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
+                          ['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook']]]
+
     def get_click(self, event):
         self.tkGrid.flip()
+
     def find_moves(self, pos):
-        pieceName=(self.strboard[pos[0]][pos[1]]+" ")[1:]
-        if pieceName=="Pawn":
+        pieceName = (self.strboard[pos[0]][pos[1]] + " ")[1:]
+        if pieceName == "Pawn":
             for i in pawn_moves(pos):
                 pass
+
     def pawn_moves(self, pos):
-        possible_moves=[]
-        a=pos[0]
-        b=pos[1]
+        possible_moves = []
+        a = pos[0]
+        b = pos[1]
         if self.turnColor == 1:
             try:
                 if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
                     pass
                 elif "b" in self.strboard[a][b + 2] or "w" in self.strboard[a][b + 2]:
-                    possible_moves.append([a,b + 1])
+                    possible_moves.append([a, b + 1])
                 else:
-                    possible_moves.extend([[a,b + 1], [a,b+2]])
+                    possible_moves.extend([[a, b + 1], [a, b + 2]])
             except (TypeError, IndexError):
                 pass
             try:
                 if "b" in self.strboard[a + 1][b + 1] and "b" in self.strboard[a - 1][b + 1] and a - 1 >= 0:
-                    possible_moves.append([a + 1,b + 1])
-                    possible_moves.append([a - 1,b + 1])
+                    possible_moves.append([a + 1, b + 1])
+                    possible_moves.append([a - 1, b + 1])
             except (TypeError, IndexError):
                 pass
             try:
                 if "b" in self.strboard[a + 1][b + 1]:
-                    possible_moves.append([a+1,b+1])
+                    possible_moves.append([a + 1, b + 1])
             except (TypeError, IndexError):
                 pass
             try:
                 if "b" in self.strboard[a - 1][b + 1] and a - 1 >= 0:
-                    possible_moves.append([a-1, b+1])
+                    possible_moves.append([a - 1, b + 1])
             except (TypeError, IndexError):
                 pass
         else:
             if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
                 pass
             else:
-                possible_moves.append([a, b+1])
+                possible_moves.append([a, b + 1])
             try:
                 if "b" in self.strboard[a + 1][b + 1] and "b" in self.strboard[a - 1][b + 1]:
-                    possible_moves.extend([[a+1, b+1], [a-1, b+1]])
+                    possible_moves.extend([[a + 1, b + 1], [a - 1, b + 1]])
             except (TypeError, IndexError):
                 pass
             try:
                 if "b" in self.strboard[a + 1][b + 1]:
-                    possible_moves.append([a+1,b+1])
+                    possible_moves.append([a + 1, b + 1])
             except (TypeError, IndexError):
                 pass
             try:
                 if "b" in self.strboard[a - 1][b + 1]:
-                    possible_moves.append([a-1,b+1])
+                    possible_moves.append([a - 1, b + 1])
             except (TypeError, IndexError):
                 pass
         return possible_moves
+
     def bishop_moves(self, pos):
-        possible_moves=[]
-        #Note, this currently only works for white pieces.
-        a=pos[0]
-        b=pos[1]
-        colors=["w", "b"]
-        pieceColor = self.strboard[a][b][0]
-        oppositePieceColor = colors[1-colors.index[pieceColor]]
+        possible_moves = []
+        # Note, this currently only works for white pieces.
+        a = pos[0]
+        b = pos[1]
+        colors = ["w", "b"]
+        piece_color = self.strboard[a][b][0]
+        opposite_piece_color = colors[1 - colors.index[piece_color]]
         try:
             for i in range(1, 8):
-                currentString = self.strboard[a + i][b - i] + " "
-                if currentString[0] == oppositePieceColor and b - i >= 0:
-                    possible_moves.append([a+i,b-i])
+                current_string = self.strboard[a + i][b - i] + " "
+                if current_string[0] == opposite_piece_color and b - i >= 0:
+                    possible_moves.append([a + i, b - i])
                     break
-                elif currentString[0] == pieceColor:
+                elif current_string[0] == piece_color:
                     break
                 elif b - i < 0:
                     break
                 else:
-                    possible_moves.append([a+i,b-i])
+                    possible_moves.append([a + i, b - i])
         except IndexError:
             pass
         try:
             for i in range(1, 8):
-                currentString = self.strboard[a - i][b - i] + " "
-                if currentString[0] == "b" and b - i >= 0 and a - i >= 0:
-                    possible_moves.append([a-i,b-i])
+                current_string = self.strboard[a - i][b - i] + " "
+                if current_string[0] == opposite_piece_color and b - i >= 0 and a - i >= 0:
+                    possible_moves.append([a - i, b - i])
                     break
-                elif currentString[0] == "w":
+                elif current_string[0] == piece_color:
                     break
                 elif b - i < 0:
                     break
                 elif a - i < 0:
                     break
                 else:
-                    possible_moves.append([a-i, b-i])
+                    possible_moves.append([a - i, b - i])
         except IndexError:
             pass
         try:
             for i in range(1, 8):
-                currentString = self.strboard[a + i][b + i] + " "
-                if currentString[0] == "b":
-                    possible_moves.append([a+i,b+i])
+                current_string = self.strboard[a + i][b + i] + " "
+                if current_string[0] == opposite_piece_color:
+                    possible_moves.append([a + i, b + i])
                     break
-                elif currentString[0] == "w":
+                elif current_string[0] == piece_color:
                     break
                 else:
-                    possible_moves.append([a+i,b+i])
+                    possible_moves.append([a + i, b + i])
         except IndexError:
             pass
         try:
             for i in range(1, 8):
-                currentString = self.strboard[a - i][b + i] + " "
-                if currentString[0] == "b" and a - i >= 0:
-                    possible_moves.append([a-i,b-i])
+                current_string = self.strboard[a - i][b + i] + " "
+                if current_string[0] == opposite_piece_color and a - i >= 0:
+                    possible_moves.append([a - i, b - i])
                     break
-                elif currentString[0] == "w":
+                elif current_string[0] == piece_color:
                     break
                 elif a - i < 0:
                     break
                 else:
-                    possible_moves.append([a-i,b+i])
+                    possible_moves.append([a - i, b + i])
         except IndexError:
             pass
         return possible_moves
+
     def knight_moves(self, pos):
         pass
+
     def rook_moves(self, pos):
         pass
+
     def queen_moves(self, pos):
         pass
+
     def king_moves(self, pos):
         pass
-    
+
+
 bob = Tk()
 chessFrame = ChessFrame(bob)
 chessFrame.pack()

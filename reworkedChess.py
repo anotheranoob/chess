@@ -125,13 +125,13 @@ class ChessFrame(Frame):
         self.tkGrid.pack()
         self.turnColor = 0
         self.strboard = [['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook'],
-                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
-                          ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
-                          ['wQueen', 'wPawn', '', '', '', '', 'bPawn', 'bQueen'],
-                          ['wKing', 'wPawn', '', '', '', '', 'bPawn', 'bKing'],
-                          ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
-                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
-                          ['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook']]
+                         ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
+                         ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
+                         ['wQueen', 'wPawn', '', '', '', '', 'bPawn', 'bQueen'],
+                         ['wKing', 'wPawn', '', '', '', '', 'bPawn', 'bKing'],
+                         ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
+                         ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
+                         ['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook']]
 
     def get_click(self, event):
         print(event.widget.position)
@@ -141,7 +141,6 @@ class ChessFrame(Frame):
         for i in positions:
             print(i)
             self.tkGrid.board[i[0]][i[1]].config(bg="red")
-            
 
     def find_moves(self, pos):
         print(pos)
@@ -157,10 +156,10 @@ class ChessFrame(Frame):
         possible_moves = []
         a = pos[0]
         b = pos[1]
-        #work in progress
-        print(a,b)
+        # work in progress
+        print(a, b)
         if self.turnColor == 0:
-            if self.strboard[a][b][0]=="b":
+            if self.strboard[a][b][0] == "b":
                 return []
             if b == 1:
                 try:
@@ -281,64 +280,65 @@ class ChessFrame(Frame):
         pass
 
     def rook_moves(self, pos):
-        possible_moves=[]
-        #STILL NEEDS FIXING
+        possible_moves = []
+        # STILL NEEDS FIXING
         a = pos[0]
         b = pos[1]
-        colors = ["w", "b"]        
+        colors = ["w", "b"]
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a][b + i] + " "
                 if currentString[0] == "b":
-                    possible_moves.append([a,b+i])
+                    possible_moves.append([a, b + i])
                     break
                 elif currentString[0] == "w":
                     break
                 else:
-                    possible_moves.append([a,b+i])
+                    possible_moves.append([a, b + i])
         except IndexError:
             pass
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a + i][b] + " "
                 if currentString[0] == "b":
-                    possible_moves.append([a+i,b])
+                    possible_moves.append([a + i, b])
                     break
                 elif currentString[0] == "w":
                     break
                 else:
-                    possible_moves.append([a+i,b])
+                    possible_moves.append([a + i, b])
         except IndexError:
             pass
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a - i][b] + " "
                 if currentString[0] == "b" and a - i >= 0:
-                    possible_moves.append([a-i,b])
+                    possible_moves.append([a - i, b])
                     break
                 elif currentString[0] == "w" and a - i >= 0:
                     break
                 elif a - 1 < 0:
                     break
                 else:
-                    possible_moves.append([a-i,b])
+                    possible_moves.append([a - i, b])
         except IndexError:
             pass
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a][b - i] + " "
                 if currentString[0] == "b" and b - i >= 0:
-                    possible_moves.append([a,b-i])
+                    possible_moves.append([a, b - i])
                     break
                 elif currentString[0] == "w":
                     break
                 elif b - i < 0:
                     break
                 else:
-                    possible_moves.append([a,b-i])
+                    possible_moves.append([a, b - i])
         except IndexError:
             pass
         return possible_moves
+
     def queen_moves(self, pos):
         pass
 
@@ -352,7 +352,6 @@ chessFrame.pack()
 bob.mainloop()
 
 '''
-
 class ChessGame(Frame):
     def chessCallback(self, event):
         ls = list(event.position)
@@ -582,7 +581,6 @@ class ChessGame(Frame):
                         self.board[a - 1][b - 1].config(bg="red")
                 except (TypeError, IndexError):
                     pass
-
             self.isPieceSelected = True
             self.pieceSelected = "bpawn"
             self.pieceSelectedLocation = ls
@@ -754,8 +752,6 @@ class ChessGame(Frame):
             self.isPieceSelected = True
             self.pieceSelected = "wqueen"
             self.pieceSelectedLocation = ls
-
-
         elif x == "bRook" and self.turn % 2 == 0:
             try:
                 for i in range(1, 8):
@@ -984,7 +980,6 @@ class ChessGame(Frame):
             self.isPieceSelected = True
             self.pieceSelected = "bqueen"
             self.pieceSelectedLocation = ls
-
         elif x == "wBishop" and self.turn % 2 == 1:
             try:
                 for i in range(1, 8):
@@ -1065,7 +1060,6 @@ class ChessGame(Frame):
             self.isPieceSelected = True
             self.pieceSelected = "wknight"
             self.pieceSelectedLocation = ls
-
         elif x == "bKnight" and self.turn % 2 == 0:
             for i in [2, 1, -2, -1]:
                 for x in [2, 1, -2, -1]:
@@ -1086,7 +1080,6 @@ class ChessGame(Frame):
             self.isPieceSelected = True
             self.pieceSelected = "bknight"
             self.pieceSelectedLocation = ls
-
         elif x == "wKing" and self.turn % 2 == 1:
             for i in [1, -1, 0]:
                 for x in [1, -1, 0]:
@@ -1113,7 +1106,6 @@ class ChessGame(Frame):
             self.isPieceSelected = True
             self.pieceSelected = "wking"
             self.pieceSelectedLocation = ls
-
         elif x == "bKing" and self.turn % 2 == 0:
             for i in [1, -1, 0]:
                 for x in [1, -1, 0]:
@@ -1140,10 +1132,8 @@ class ChessGame(Frame):
             self.isPieceSelected = True
             self.pieceSelected = "bking"
             self.pieceSelectedLocation = ls
-
         else:
             pass
-
     def __init__(self, root):
         Frame.__init__(root)
         self.wpawn = PhotoImage(file="w_pawn.gif")
@@ -1152,10 +1142,8 @@ class ChessGame(Frame):
         self.wknight = PhotoImage(file="w_knight.gif")
         self.wking = PhotoImage(file="w_king.gif")
         self.wqueen = PhotoImage(file="w_queen.gif")
-
         self.root = root
         self.winMessage = Label(root)
-
         self.bpawn = PhotoImage(file="b_pawn.gif")
         self.brook = PhotoImage(file="b_rook.gif")
         self.bbishop = PhotoImage(file="b_bishop.gif")
@@ -1248,14 +1236,12 @@ class ChessGame(Frame):
                 j.config(bg="burlywood3")
                 #        while self.notGameOver:
         self.do_move(root)
-
     def noMoves(self):
         for i in range(8):
             for x in range(8):
                 if self.board[i][x].cget('bg') == "red":
                     return False
         return True
-
     def bPawnKnight(self):
         self.board[self.a][self.b].config(image=self.bknight)
         self.strboard[self.a][self.b] = "bKnight"
@@ -1268,7 +1254,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def bPawnBishop(self):
         self.board[self.a][self.b].config(image=self.bbishop)
         self.strboard[self.a][self.b] = "bBishop"
@@ -1281,7 +1266,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def bPawnQueen(self):
         self.board[self.a][self.b].config(image=self.bqueen)
         self.strboard[self.a][self.b] = "bQueen"
@@ -1294,7 +1278,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def bPawnRook(self):
         self.board[self.a][self.b].config(image=self.brook)
         self.strboard[self.a][self.b] = "bRook"
@@ -1307,7 +1290,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def wPawnKnight(self):
         self.board[self.a][self.b].config(image=self.wknight)
         self.strboard[self.a][self.b] = "wKnight"
@@ -1320,7 +1302,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def wPawnBishop(self):
         self.board[self.a][self.b].config(image=self.wbishop)
         self.strboard[self.a][self.b] = "wBishop"
@@ -1333,7 +1314,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def wPawnQueen(self):
         self.board[self.a][self.b].config(image=self.wqueen)
         self.strboard[self.a][self.b] = "wQueen"
@@ -1346,7 +1326,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def wPawnRook(self):
         self.board[self.a][self.b].config(image=self.wrook)
         self.strboard[self.a][self.b] = "wRook"
@@ -1359,7 +1338,6 @@ class ChessGame(Frame):
         self.turnOver = True
         self.turn += 1
         self.do_move(root)
-
     def wPawnPromotion(self, a, b):
         self.promotionWindow = Toplevel()
         self.promotionWindow.wm_title("Promotion")
@@ -1372,7 +1350,6 @@ class ChessGame(Frame):
         self.b = b
         for i in range(4):
             self.promotionGrid[i].grid(column=i, row=0)
-
     def bPawnPromotion(self, a, b):
         self.promotionWindow = Toplevel()
         self.promotionWindow.wm_title("Promotion")
@@ -1385,13 +1362,10 @@ class ChessGame(Frame):
         self.promotionGrid.append(Button(self.promotionWindow, image=self.bknight, command=self.bPawnKnight))
         for i in range(4):
             self.promotionGrid[i].grid(column=i, row=0)
-
     def wKingInCheck(self):
         return False
-
     def bKingInCheck(self):
         return False
-
     def do_move(self, root):
         for i in range(8):
             for x in range(8):
@@ -1418,22 +1392,18 @@ class ChessGame(Frame):
             for i in range(8):
                 for x in range(8):
                     self.board[i][x].grid(column=7 - i, row=x)
-
     def b_won(self, root):
         for i in range(8):
             for x in range(8):
                 if self.strboard[i][x] == "wKing":
                     return False
         return True
-
     def w_won(self, root):
         for i in range(8):
             for x in range(8):
                 if self.strboard[i][x] == "bKing":
                     return False
         return True
-
-
 root = Tk()
 root.wm_title("Chess Game")
 chess = ChessGame(root)

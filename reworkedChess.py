@@ -31,6 +31,7 @@ class ChessGrid(Frame):
         self.bking = PhotoImage(file="b_king.gif")
         self.bqueen = PhotoImage(file="b_queen.gif")
         self.blanksquare = PhotoImage()
+        print(self.blanksquare)
         self.board = [[None, None, None, None, None, None, None, None],
                       [None, None, None, None, None, None, None, None],
                       [None, None, None, None, None, None, None, None],
@@ -132,6 +133,7 @@ class ChessFrame(Frame):
                          ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
                          ['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook']]
+        self.remove_pawns()
 
     def get_click(self, event):
         print(event.widget.position)
@@ -149,8 +151,18 @@ class ChessFrame(Frame):
         if pieceName == "Pawn ":
             print("Hi")
             return self.pawn_moves(pos)
-        if pieceName == "Bishop ":
+        elif pieceName == "Bishop ":
             return self.bishop_moves(pos)
+        elif pieceName == "Rook ":
+            return self.rook_moves(pos)
+
+    def remove_pawns(self):
+        for i in range(8):
+            for x in range(8):
+                if 'Pawn' in self.strboard[i][x]:
+                    self.strboard[i][x] = ""
+                    self.blanksquare = PhotoImage()
+                    self.tkGrid.board[i][x].config(image=self.blanksquare)
 
     def pawn_moves(self, pos):
         possible_moves = []
@@ -217,7 +229,7 @@ class ChessFrame(Frame):
         b = pos[1]
         colors = ["w", "b"]
         piece_color = self.strboard[a][b][0]
-        opposite_piece_color = colors[1 - colors.index[piece_color]]
+        opposite_piece_color = colors[1 - colors.index(piece_color)]
         try:
             for i in range(1, 8):
                 current_string = self.strboard[a + i][b - i] + " "

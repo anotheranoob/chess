@@ -133,7 +133,6 @@ class ChessFrame(Frame):
                          ['wBishop', 'wPawn', '', '', '', '', 'bPawn', 'bBishop'],
                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
                          ['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook']]
-        self.remove_pawns()
 
     def get_click(self, event):
         print(event.widget.position)
@@ -142,7 +141,8 @@ class ChessFrame(Frame):
             return
         for i in positions:
             print(i)
-            self.tkGrid.board[i[0]][i[1]].config(bg="red")
+            self.tkGrid.board[i[0]][i[1]].config(bg="red",  activebackground="sienna4",
+                                                  borderwidth=2, height=58, width=58)
 
     def find_moves(self, pos):
         print(pos)
@@ -162,7 +162,7 @@ class ChessFrame(Frame):
                 if 'Pawn' in self.strboard[i][x]:
                     self.strboard[i][x] = ""
                     self.blanksquare = PhotoImage()
-                    self.tkGrid.board[i][x].config(image=self.blanksquare)
+                    self.tkGrid.board[i][x].config(image=self.tkGrid.blanksquare)
 
     def pawn_moves(self, pos):
         possible_moves = []

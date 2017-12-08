@@ -30,6 +30,7 @@ class ChessGrid(Frame):
         self.bknight = PhotoImage(file="b_knight.gif")
         self.bking = PhotoImage(file="b_king.gif")
         self.bqueen = PhotoImage(file="b_queen.gif")
+        sekf.red = PhotoImage(file="Red.gif")
         self.blanksquare = PhotoImage()
         print(self.blanksquare)
         self.board = [[None, None, None, None, None, None, None, None],

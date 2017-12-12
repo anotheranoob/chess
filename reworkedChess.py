@@ -376,7 +376,6 @@ class ChessFrame(Frame):
         return possible_moves
 
     def rook_moves(self, pos):
-        # STILL NEEDS FIXING
         possible_moves = []
         a = pos[0]
         b = pos[1]

@@ -376,18 +376,20 @@ class ChessFrame(Frame):
         return possible_moves
 
     def rook_moves(self, pos):
-        possible_moves = []
         # STILL NEEDS FIXING
+        possible_moves = []
         a = pos[0]
         b = pos[1]
         colors = ["w", "b"]
+        piece_color = self.strboard[a][b][0]
+        opposite_piece_color = colors[1 - colors.index(piece_color)]
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a][b + i] + " "
-                if currentString[0] == "b":
+                if currentString[0] == opposite_piece_color:
                     possible_moves.append([a, b + i])
                     break
-                elif currentString[0] == "w":
+                elif currentString[0] == piece_color:
                     break
                 else:
                     possible_moves.append([a, b + i])
@@ -396,10 +398,10 @@ class ChessFrame(Frame):
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a + i][b] + " "
-                if currentString[0] == "b":
+                if currentString[0] == opposite_piece_color:
                     possible_moves.append([a + i, b])
                     break
-                elif currentString[0] == "w":
+                elif currentString[0] == piece_color:
                     break
                 else:
                     possible_moves.append([a + i, b])
@@ -408,10 +410,10 @@ class ChessFrame(Frame):
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a - i][b] + " "
-                if currentString[0] == "b" and a - i >= 0:
+                if currentString[0] == opposite_piece_color and a - i >= 0:
                     possible_moves.append([a - i, b])
                     break
-                elif currentString[0] == "w" and a - i >= 0:
+                elif currentString[0] == piece_color and a - i >= 0:
                     break
                 elif a - 1 < 0:
                     break
@@ -422,10 +424,10 @@ class ChessFrame(Frame):
         try:
             for i in range(1, 8):
                 currentString = self.strboard[a][b - i] + " "
-                if currentString[0] == "b" and b - i >= 0:
+                if currentString[0] == opposite_piece_color and b - i >= 0:
                     possible_moves.append([a, b - i])
                     break
-                elif currentString[0] == "w":
+                elif currentString[0] == piece_color:
                     break
                 elif b - i < 0:
                     break

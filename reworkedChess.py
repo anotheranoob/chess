@@ -242,8 +242,8 @@ class ChessFrame(Frame):
                     pass
                 try:
                     if "w" in self.strboard[a - 1][b - 1] and "w" in self.strboard[a - 1][
-                                b - 1] and a - 1 >= 0 and not (self.strboard[a + 1][b - 1] == "bPawn") and not (
-                                self.strboard[a - 1][b - 1] == "bPawn"):
+                        b - 1] and a - 1 >= 0 and not (self.strboard[a + 1][b - 1] == "bPawn") and not (
+                            self.strboard[a - 1][b - 1] == "bPawn"):
                         possible_moves.append([a + 1, b - 1])
                         possible_moves.append([a - 1, b - 1])
 
@@ -256,7 +256,7 @@ class ChessFrame(Frame):
                     pass
                 try:
                     if "w" in self.strboard[a - 1][b - 1] and a - 1 >= 0 and not (
-                                self.strboard[a - 1][b - 1] == "bPawn"):
+                            self.strboard[a - 1][b - 1] == "bPawn"):
                         possible_moves.append([a - 1, b - 1])
                 except (TypeError, IndexError):
                     pass
@@ -267,8 +267,8 @@ class ChessFrame(Frame):
                     possible_moves.append([a, b - 1])
                 try:
                     if "w" in self.strboard[a + 1][b - 1] and "w" in self.strboard[a - 1][
-                                b - 1] and a - 1 > -0 and not (self.strboard[a + 1][b - 1] == "bPawn") and not (
-                                self.strboard[a - 1][b - 1] == "bPawn"):
+                        b - 1] and a - 1 > -0 and not (self.strboard[a + 1][b - 1] == "bPawn") and not (
+                            self.strboard[a - 1][b - 1] == "bPawn"):
                         possible_moves.append([a + 1, b - 1])
                         possible_moves.append([a - 1, b - 1])
                 except (TypeError, IndexError):
@@ -280,7 +280,7 @@ class ChessFrame(Frame):
                     pass
                 try:
                     if "w" in self.strboard[a - 1][b - 1] and not (
-                                self.strboard[a - 1][b - 1] == "bPawn") and a - 1 >= 0:
+                            self.strboard[a - 1][b - 1] == "bPawn") and a - 1 >= 0:
                         possible_moves.append([a - 1, b - 1])
                 except (TypeError, IndexError):
                     pass

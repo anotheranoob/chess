@@ -440,9 +440,20 @@ class ChessFrame(Frame):
         return self.bishop_moves(pos)+self.rook_moves(pos)
         #this works because a queen is basically a rook and a bishop on one square
 
-    def king_moves(self, pos):
-        pass
-
+    def king_moves(self, pos, castle=False):
+        possible_moves = []
+        a = pos[0]
+        b = pos[1]
+        colors = ["w", "b"]
+        piece_color = self.strboard[a][b][0]
+        opposite_piece_color = colors[1 - colors.index(piece_color)]        
+        if castle:
+            possible_moves.append([a+2, b])
+        for i in [-1,0,1]:
+            for x in [-1,0,1]:
+                if not (i==0 and x==0) and self.strboard[a+i][b+x]!=piece_color:
+                    possible_moves.append([a+i,b+x])
+        return possible_moves
 
 bob = Tk()
 chessFrame = ChessFrame(bob)

@@ -144,9 +144,10 @@ class ChessFrame(Frame):
         for i in positions:
             print(i)
             if self.tkGrid.board[i[0]][i[1]]['bg'] == "green4":
-                self.tkGrid.board[i[0]][i[1]].config(bg = "red3")
+                self.tkGrid.board[i[0]][i[1]].config(bg="red3")
             elif self.tkGrid.board[i[0]][i[1]]['bg'] == "antique white":
-                self.tkGrid.board[i[0]][i[1]].config(bg = "red2")
+                self.tkGrid.board[i[0]][i[1]].config(bg="red2")
+
     def find_moves(self, pos):
         print(pos)
         pieceName = (self.strboard[pos[0]][pos[1]] + " ")[1:]
@@ -242,7 +243,7 @@ class ChessFrame(Frame):
                 try:
                     if "w" in self.strboard[a - 1][b - 1] and "w" in self.strboard[a - 1][
                                 b - 1] and a - 1 >= 0 and not (self.strboard[a + 1][b - 1] == "bPawn") and not (
-                        self.strboard[a - 1][b - 1] == "bPawn"):
+                                self.strboard[a - 1][b - 1] == "bPawn"):
                         possible_moves.append([a + 1, b - 1])
                         possible_moves.append([a - 1, b - 1])
 
@@ -255,7 +256,7 @@ class ChessFrame(Frame):
                     pass
                 try:
                     if "w" in self.strboard[a - 1][b - 1] and a - 1 >= 0 and not (
-                        self.strboard[a - 1][b - 1] == "bPawn"):
+                                self.strboard[a - 1][b - 1] == "bPawn"):
                         possible_moves.append([a - 1, b - 1])
                 except (TypeError, IndexError):
                     pass
@@ -267,7 +268,7 @@ class ChessFrame(Frame):
                 try:
                     if "w" in self.strboard[a + 1][b - 1] and "w" in self.strboard[a - 1][
                                 b - 1] and a - 1 > -0 and not (self.strboard[a + 1][b - 1] == "bPawn") and not (
-                        self.strboard[a - 1][b - 1] == "bPawn"):
+                                self.strboard[a - 1][b - 1] == "bPawn"):
                         possible_moves.append([a + 1, b - 1])
                         possible_moves.append([a - 1, b - 1])
                 except (TypeError, IndexError):
@@ -279,7 +280,7 @@ class ChessFrame(Frame):
                     pass
                 try:
                     if "w" in self.strboard[a - 1][b - 1] and not (
-                        self.strboard[a - 1][b - 1] == "bPawn") and a - 1 >= 0:
+                                self.strboard[a - 1][b - 1] == "bPawn") and a - 1 >= 0:
                         possible_moves.append([a - 1, b - 1])
                 except (TypeError, IndexError):
                     pass
@@ -362,7 +363,7 @@ class ChessFrame(Frame):
                 if abs(i) != abs(x):
                     try:
                         if (self.strboard[a + i][b + x] + " ")[0] == opposite_piece_color and a + i >= 0 and b + x >= 0:
-                            possible_moves.append([a+i, b+x])
+                            possible_moves.append([a + i, b + x])
                         elif (self.strboard[a + i][b + x] + " ")[0] == piece_color:
                             pass
                         elif a + i < 0:
@@ -370,7 +371,7 @@ class ChessFrame(Frame):
                         elif b + x < 0:
                             pass
                         else:
-                            possible_moves.append([a+i, b+x])
+                            possible_moves.append([a + i, b + x])
                     except IndexError:
                         pass
         return possible_moves
@@ -437,8 +438,8 @@ class ChessFrame(Frame):
         return possible_moves
 
     def queen_moves(self, pos):
-        return self.bishop_moves(pos)+self.rook_moves(pos)
-        #this works because a queen is basically a rook and a bishop on one square
+        return self.bishop_moves(pos) + self.rook_moves(pos)
+        # this works because a queen is basically a rook and a bishop on one square
 
     def king_moves(self, pos, castle=False):
         possible_moves = []
@@ -446,14 +447,15 @@ class ChessFrame(Frame):
         b = pos[1]
         colors = ["w", "b"]
         piece_color = self.strboard[a][b][0]
-        opposite_piece_color = colors[1 - colors.index(piece_color)]        
+        opposite_piece_color = colors[1 - colors.index(piece_color)]
         if castle:
-            possible_moves.append([a+2, b])
-        for i in [-1,0,1]:
-            for x in [-1,0,1]:
-                if not (i==0 and x==0) and self.strboard[a+i][b+x]!=piece_color:
-                    possible_moves.append([a+i,b+x])
+            possible_moves.append([a + 2, b])
+        for i in [-1, 0, 1]:
+            for x in [-1, 0, 1]:
+                if not (i == 0 and x == 0) and self.strboard[a + i][b + x] != piece_color:
+                    possible_moves.append([a + i, b + x])
         return possible_moves
+
 
 bob = Tk()
 chessFrame = ChessFrame(bob)

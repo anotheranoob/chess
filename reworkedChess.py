@@ -152,6 +152,7 @@ class ChessFrame(Frame):
                 self.isPieceSelected = False
                 self.pieceSelectedPosition = None
                 self.tkGrid.reset_bg()
+            print(self.strboard[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]])
             
             #First we have to do handling for Kings and Queens here, then we have to do validation
         else:

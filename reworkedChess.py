@@ -9,9 +9,6 @@ class ChessPiece(Label):
         self.pieceName = pieceName
         self.master = master
 
-    def print_name(self, event):
-        self.master.flip()
-
 
 class ChessGrid(Frame):
     def __init__(self, master):
@@ -32,7 +29,6 @@ class ChessGrid(Frame):
         self.bqueen = PhotoImage(file="b_queen.gif")
         self.red = PhotoImage(file="Red.gif")
         self.blanksquare = PhotoImage()
-        print(self.blanksquare)
         self.board = [[None, None, None, None, None, None, None, None],
                       [None, None, None, None, None, None, None, None],
                       [None, None, None, None, None, None, None, None],
@@ -68,8 +64,8 @@ class ChessGrid(Frame):
         for i in [2, 5]:
             for x in [7]:
                 self.board[i][x] = ChessPiece(self, "bBishop", self.bbishop, [i, x])
-        self.board[3][7] = ChessPiece(self, "bQueen", self.bqueen, [3, 0])
-        self.board[4][7] = ChessPiece(self, "bKing", self.bking, [4, 0])
+        self.board[3][7] = ChessPiece(self, "bQueen", self.bqueen, [3, 7])
+        self.board[4][7] = ChessPiece(self, "bKing", self.bking, [4, 7])
         for i in range(8):
             for x in range(8):
                 self.board[i][x].grid(row=7 - x, column=i)
@@ -137,23 +133,21 @@ class ChessFrame(Frame):
         self.remove_pawns()
 
     def get_click(self, event):
-        print(event.widget.position)
         positions = self.find_moves(event.widget.position)
         if positions == None:
             return
+        if ["w", "b"].index(
+                (self.strboard[event.widget.position[0]][event.widget.position[1]] + " ")[0]) != self.turnColor:
+            return
         for i in positions:
-            print(i)
             if self.tkGrid.board[i[0]][i[1]]['bg'] == "green4":
                 self.tkGrid.board[i[0]][i[1]].config(bg="red3")
             elif self.tkGrid.board[i[0]][i[1]]['bg'] == "antique white":
                 self.tkGrid.board[i[0]][i[1]].config(bg="red2")
 
     def find_moves(self, pos):
-        print(pos)
         pieceName = (self.strboard[pos[0]][pos[1]] + " ")[1:]
-        print(pieceName)
         if pieceName == "Pawn ":
-            print("Hi")
             return self.pawn_moves(pos)
         elif pieceName == "Bishop ":
             return self.bishop_moves(pos)
@@ -163,20 +157,20 @@ class ChessFrame(Frame):
             return self.knight_moves(pos)
         elif pieceName == "Queen ":
             return self.queen_moves(pos)
+        elif pieceName == "King ":
+            return self.king_moves(pos)
 
     def remove_pawns(self):
         for i in range(8):
             for x in range(8):
                 if 'Pawn' in self.strboard[i][x]:
                     self.strboard[i][x] = ""
-                    self.blanksquare = PhotoImage()
                     self.tkGrid.board[i][x].config(image=self.tkGrid.blanksquare)
 
     def pawn_moves(self, pos):
         possible_moves = []
         a = pos[0]
         b = pos[1]
-        print(a, b)
         if self.turnColor == 0:
             if self.strboard[a][b][0] == "b":
                 return []
@@ -447,12 +441,12 @@ class ChessFrame(Frame):
         b = pos[1]
         colors = ["w", "b"]
         piece_color = self.strboard[a][b][0]
-        opposite_piece_color = colors[1 - colors.index(piece_color)]
         if castle:
             possible_moves.append([a + 2, b])
         for i in [-1, 0, 1]:
             for x in [-1, 0, 1]:
-                if not (i == 0 and x == 0) and self.strboard[a + i][b + x] != piece_color:
+                if not (i == 0 and x == 0) and a+i<8 and b+i<8 and (self.strboard[a + i][b + x] + " ")[0] != piece_color and not (
+                        a + i < 0 or b + x < 0):
                     possible_moves.append([a + i, b + x])
         return possible_moves
 

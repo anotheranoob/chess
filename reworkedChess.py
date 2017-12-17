@@ -155,6 +155,16 @@ class ChessFrame(Frame):
         self.strboard[initial[0]][initial[1]] = ''
         self.tkGrid.set_up_board(self.strboard)
 
+    def is_check(self, color):
+        # Checks to see if the player with color color has check on the other player
+        for i in range(8):
+            for x in range(8):
+                if (self.strboard[i][x] + " ")[0] == ["w", "b"][color]:
+                    for z in self.find_moves([i, x]):
+                        if (self.strboard[z[0]][z[1]] + " ")[0] == ['w', 'b'][1-color]:
+                            return True
+        return False
+
     def validate_move(self, initial, second):
         # This function will work by creating another chessFrame that has the board with the move done, then it will
         # see whether or not it leaves your king in check or not.
@@ -168,7 +178,7 @@ class ChessFrame(Frame):
                     for z in validationBoard.find_moves([i, x]):
                         if (validationBoard.strboard[z[0]][z[1]] + " ")[1:] == "King ":
                             return False
-        print(self.strboard)
+        # print(self.strboard)
         return True
 
     def get_click(self, event):
@@ -182,18 +192,20 @@ class ChessFrame(Frame):
             # First we have to do handling for stalemate, castling, and checks WHICH ISN'T IMPLEMENTED YET
             if not (self.tkGrid.board[event.widget.position[0]][event.widget.position[1]]['bg'] in ["red3",
                                                                                                     "red2"]):
-                print("DAMN IT")
+                # print("DAMN IT")
                 return
             if self.validate_move(self.pieceSelectedPosition, event.widget.position):
-                print("YAY")
+                # print("YAY")
                 self.do_move(self.pieceSelectedPosition, event.widget.position)
                 self.tkGrid.reset_bg()
                 self.isPieceSelected = False
                 self.pieceSelectedPosition = None
                 self.turnColor = 1-self.turnColor
+            else:
+                print(self.is_check(1-self.turnColor))
             return
         else:
-            print(self.strboard[event.widget.position[0]][event.widget.position[1]])
+            # print(self.strboard[event.widget.position[0]][event.widget.position[1]])
             if ["w", "b", " "].index(
                     (self.strboard[event.widget.position[0]][event.widget.position[1]] + " ")[0]) != self.turnColor:
                 return
@@ -401,7 +413,7 @@ class ChessFrame(Frame):
             for i in range(1, 8):
                 current_string = self.strboard[a - i][b + i] + " "
                 if current_string[0] == opposite_piece_color and a - i >= 0:
-                    print('yay')
+                    # print('yay')
                     possible_moves.append([a - i, b + i])
                     break
                 elif current_string[0] == piece_color:

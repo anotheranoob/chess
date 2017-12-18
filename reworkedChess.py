@@ -144,9 +144,9 @@ class ChessFrame(Frame):
         self.isPieceSelected = False
         self.pieceSelectedPosition = None
         self.wKingCastleKingside = True
-        self.bKingCastleQueenside = False
-        self.bKingCastleKingside = False
-        self.wKingCastleQueenside = False
+        self.bKingCastleQueenside = True
+        self.bKingCastleKingside = True
+        self.wKingCastleQueenside = True
 
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
@@ -217,29 +217,37 @@ class ChessFrame(Frame):
             # This prevents you from crashing the program
             # (just in case I wrote something wrong and instead of an empty list it gives you a NoneType)
             # This big if statement will handle castling
-            if pieceName[1:] == "King":
+            if pieceName[1:] == "King ":
+                print("xd")
+                print(self.wKingCastleQueenside)
+                print(self.wKingCastleKingside)
                 # So here I'm going to write code to handle the no castling in check move
                 if self.is_check(1 - self.turnColor):
                     positions = self.find_moves(event.widget.position)
                 else:
                     # So here I'm going to do checking to see if you can castle Kingside
                     currentCanCastleKingside = False
+                    currentCanCastleQueenside = False
                     if self.turnColor == 0 and self.wKingCastleKingside:
                         # This will check to see if the squares are unoccupied
                         for i in range(1,3):
+                            print(self.validate_move(event.widget.position, [event.widget.position[0]+i, event.widget.position[1]]))
                             if not(self.strboard[event.widget.position[0]+i][event.widget.position[1]]) and self.validate_move(event.widget.position, [event.widget.position[0]+i, event.widget.position[1]]):
                                 if i == 2:
                                     currentCanCastleKingside = True
+                                print("LOL")
                             else:
                                 break
-                    if self.turnColor == 0 and self.wKingCastleKingside:
+                    if self.turnColor == 0 and self.wKingCastleQueenside:
                         # This will check to see if the squares are unoccupied
-                        for i in range(1,3):
-                            if not(self.strboard[event.widget.position[0]+i][event.widget.position[1]]):
+                        for i in range(1, 3):
+                            if not(self.strboard[event.widget.position[0]-i][event.widget.position[1]]):
+                                print("lol")
                                 if i == 2:
-                                    currentCanCastleKingside = True
+                                    currentCanCastleQueenside = True
                             else:
                                 break
+                    positions = self.find_moves(event.widget.position, castleKingside=currentCanCastleKingside, castleQueenside=currentCanCastleQueenside)
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position
 

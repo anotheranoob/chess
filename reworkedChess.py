@@ -173,10 +173,12 @@ class ChessFrame(Frame):
         validationBoard = ChessFrame()
         validationBoard.update_board(self.strboard)
         validationBoard.do_move(initial, second)
+        validationBoard.turnColor = 1-self.turnColor
         for i in range(8):
             for x in range(8):
                 if ["w", "b", " "].index(
                         (validationBoard.strboard[i][x] + " ")[0]) == 1 - self.turnColor:
+                    
                     for z in validationBoard.find_moves([i, x]):
                         if (validationBoard.strboard[z[0]][z[1]] + " ")[1:] == "King ":
                             return False
@@ -247,6 +249,26 @@ class ChessFrame(Frame):
                                     currentCanCastleQueenside = True
                             else:
                                 break
+                    if self.turnColor == 1 and self.bKingCastleQueenside:
+                        # This will check to see if the squares are unoccupied
+                        for i in range(1, 3):
+                            if not(self.strboard[event.widget.position[0]-i][event.widget.position[1]]):
+                                print("lol")
+                                if i == 2:
+                                    currentCanCastleQueenside = True
+                            else:
+                                break
+
+                    if self.turnColor == 1 and self.bKingCastleKingside:
+                        # This will check to see if the squares are unoccupied
+                        for i in range(1, 3):
+                            if not(self.strboard[event.widget.position[0]+i][event.widget.position[1]]):
+                                print("lol")
+                                if i == 2:
+                                    currentCanCastleKingside = True
+                            else:
+                                break
+
                     positions = self.find_moves(event.widget.position, castleKingside=currentCanCastleKingside, castleQueenside=currentCanCastleQueenside)
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position

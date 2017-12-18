@@ -1,6 +1,6 @@
 from tkinter import *
 import copy
-
+from tkinter import messagebox
 
 class ChessPiece(Label):
     def __init__(self, master, pieceName, pieceImage, position):
@@ -196,6 +196,7 @@ class ChessFrame(Frame):
             # First we have to do handling for stalemate, castling, and checks WHICH ISN'T IMPLEMENTED YET
             if not (self.tkGrid.board[event.widget.position[0]][event.widget.position[1]]['bg'] in ["red3",
                                                                                                     "red2"]):
+                messagebox.showerror('Chess','Invalid Move',parent=self)
                 # print("RIP")
                 return
             if self.validate_move(self.pieceSelectedPosition, event.widget.position):
@@ -205,7 +206,8 @@ class ChessFrame(Frame):
                 self.isPieceSelected = False
                 self.pieceSelectedPosition = None
                 self.turnColor = 1 - self.turnColor
-
+            else:
+                messagebox.showerror('Chess','Invalid Move',parent=self)
             return
         else:
             # print(self.strboard[event.widget.position[0]][event.widget.position[1]])
@@ -237,14 +239,12 @@ class ChessFrame(Frame):
                             if not(self.strboard[event.widget.position[0]+i][event.widget.position[1]]) and self.validate_move(event.widget.position, [event.widget.position[0]+i, event.widget.position[1]]):
                                 if i == 2:
                                     currentCanCastleKingside = True
-                                print("LOL")
                             else:
                                 break
                     if self.turnColor == 0 and self.wKingCastleQueenside:
                         # This will check to see if the squares are unoccupied
                         for i in range(1, 3):
                             if not(self.strboard[event.widget.position[0]-i][event.widget.position[1]]):
-                                print("lol")
                                 if i == 2:
                                     currentCanCastleQueenside = True
                             else:
@@ -253,7 +253,6 @@ class ChessFrame(Frame):
                         # This will check to see if the squares are unoccupied
                         for i in range(1, 3):
                             if not(self.strboard[event.widget.position[0]-i][event.widget.position[1]]):
-                                print("lol")
                                 if i == 2:
                                     currentCanCastleQueenside = True
                             else:
@@ -263,7 +262,6 @@ class ChessFrame(Frame):
                         # This will check to see if the squares are unoccupied
                         for i in range(1, 3):
                             if not(self.strboard[event.widget.position[0]+i][event.widget.position[1]]):
-                                print("lol")
                                 if i == 2:
                                     currentCanCastleKingside = True
                             else:

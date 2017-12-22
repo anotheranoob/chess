@@ -161,9 +161,11 @@ class ChessFrame(Frame):
         # Checks to see if the player with color color has check on the other player
         for i in range(8):
             for x in range(8):
-                if (self.strboard[i][x] + " ")[0] == ["w", "b"][color]:
+                if ["w", "b", " "].index(
+                        (self.strboard[i][x] + " ")[0]) == color:
+                    
                     for z in self.find_moves([i, x]):
-                        if (self.strboard[z[0]][z[1]] + " ")[0] == ['w', 'b'][1 - color]:
+                        if (self.strboard[z[0]][z[1]] + " ")[1:] == "King ":
                             return True
         return False
 
@@ -174,14 +176,10 @@ class ChessFrame(Frame):
         validationBoard.update_board(self.strboard)
         validationBoard.do_move(initial, second)
         validationBoard.turnColor = 1-self.turnColor
-        for i in range(8):
-            for x in range(8):
-                if ["w", "b", " "].index(
-                        (validationBoard.strboard[i][x] + " ")[0]) == 1 - self.turnColor:
-                    
-                    for z in validationBoard.find_moves([i, x]):
-                        if (validationBoard.strboard[z[0]][z[1]] + " ")[1:] == "King ":
-                            return False
+        
+        if validationBoard.is_check(1-self.turnColor):
+            return False
+        
         # print(self.strboard)
         return True
 

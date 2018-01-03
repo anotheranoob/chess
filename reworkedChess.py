@@ -260,7 +260,7 @@ class ChessFrame(Frame):
             else:
                 messagebox.showerror('Chess','Invalid Move',parent=self)
             
-            # Now we have to do handling for stalemate and checks WHICH ISN'T IMPLEMENTED YET
+            # Now we have to do handling for stalemate and checks
             if self.moves_exist(self.turnColor) == False:
                 if self.is_check(1-self.turnColor):
                     messagebox.showinfo("Game Over, {} wins!".format(['w', 'b'][1-self.turnColor]))

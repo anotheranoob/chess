@@ -1,7 +1,23 @@
+"""
+Kevin Wu p6 r23
+NOTE: Micheal might use this as part of his project for his game sharing platform.
+
+********************
+Sources
+
+CS111
+cs111.wellesley.edu/~cs111/archive/cs111_spring15/public_html/labs/lab12/tkintercolor.html
+Documentation of all tkinter color names
+
+
+
+********************
+"""
+
+
 from tkinter import *
 import copy
 from tkinter import messagebox
-
 
 class ChessPiece(Label):
     def __init__(self, master, pieceName, pieceImage, position):
@@ -158,13 +174,29 @@ class ChessFrame(Frame):
         self.strboard[initial[0]][initial[1]] = ''
         self.tkGrid.set_up_board(self.strboard)
 
+    def moves_exist(self, color):
+        # This method will be used for checking for stalemates and/or checkmates
+        for i in range(8):
+            for x in range(8):
+                pieceName = self.strboard[i][x]
+                # You don't need to check for castling because the no castling through check rule exists
+                possible_moves = []
+                for second in self.find_moves([i,x]):
+                    possible_moves.append([[i,x], z])
+                for move in possible_moves:
+                    if self.validante_move(move):
+                        return True
+        return False
+    
     def is_check(self, color):
         # Checks to see if the player with color color has check on the other player
         for i in range(8):
             for x in range(8):
-                if (self.strboard[i][x] + " ")[0] == ["w", "b"][color]:
+                if ["w", "b", " "].index(
+                        (self.strboard[i][x] + " ")[0]) == color:
+                    
                     for z in self.find_moves([i, x]):
-                        if (self.strboard[z[0]][z[1]] + " ")[0] == ['w', 'b'][1 - color]:
+                        if (self.strboard[z[0]][z[1]] + " ")[1:] == "King ":
                             return True
         return False
 
@@ -174,15 +206,11 @@ class ChessFrame(Frame):
         validationBoard = ChessFrame()
         validationBoard.update_board(self.strboard)
         validationBoard.do_move(initial, second)
-        validationBoard.turnColor = 1 - self.turnColor
-        for i in range(8):
-            for x in range(8):
-                if ["w", "b", " "].index(
-                        (validationBoard.strboard[i][x] + " ")[0]) == 1 - self.turnColor:
-
-                    for z in validationBoard.find_moves([i, x]):
-                        if (validationBoard.strboard[z[0]][z[1]] + " ")[1:] == "King ":
-                            return False
+        validationBoard.turnColor = 1-self.turnColor
+        
+        if validationBoard.is_check(1-self.turnColor):
+            return False
+        
         # print(self.strboard)
         return True
 
@@ -193,21 +221,36 @@ class ChessFrame(Frame):
                 self.pieceSelectedPosition = None
                 self.tkGrid.reset_bg()
                 return
-            for i in range(8):
-                for x in range(8):
-                    if "red" in self.tkGrid.board[i][x]["bg"]:
-                        break
-                    elif i==7 and x==7:
-                        self.isPieceSelected = False
-                        self.pieceSelectedPosition = None
-                        self.tkGrid.reset_bg()
-            # This makes sure that the user doesn't misclick some random piece and get confused.
+
             # First we have to do handling for stalemate, castling, and checks WHICH ISN'T IMPLEMENTED YET
+            
+
+            # If this if statement returns true, that means it wasn't highlighted
+            # as part of the valid moves before implementing check
             if not (self.tkGrid.board[event.widget.position[0]][event.widget.position[1]]['bg'] in ["red3",
                                                                                                     "red2"]):
-                messagebox.showerror('Chess', 'Invalid Move', parent=self)
+                messagebox.showerror('Chess','Invalid Move',parent=self)
                 # print("RIP")
                 return
+            
+            # This will do handling for invalidating castling after king/rook has been moved
+            if self.pieceName == "wKing ":
+                wKingCastleQueenside = False
+                wKingCastleKingside = False
+            if self.pieceName == "bKing ":
+                bKingCastleQueenside = False
+                bKingCastleKingside = False
+            if self.pieceName == "wRook " and self.pieceSelectedPosition == [7,0]:
+                self.wKingCastleKingside = False
+            if self.pieceName == "wRook " and self.pieceSelectedPosition == [0,0]:
+                self.wKingCastleQueenside = False
+            if self.pieceName == "bRook " and self.pieceSelectedPosition == [7,0]:
+                self.bKingCastleKingside = False
+            if self.pieceName == "bRook " and self.pieceSelectedPosition == [0,0]:
+                self.bKingCastleQueenside = False
+
+            
+            # Now we will do handling for valid/invalid moves
             if self.validate_move(self.pieceSelectedPosition, event.widget.position):
                 # print("YAY")
                 self.do_move(self.pieceSelectedPosition, event.widget.position)
@@ -216,14 +259,16 @@ class ChessFrame(Frame):
                 self.pieceSelectedPosition = None
                 self.turnColor = 1 - self.turnColor
             else:
-                messagebox.showerror('Chess', 'Invalid Move', parent=self)
+                messagebox.showerror('Chess','Invalid Move',parent=self)
             return
         else:
             # print(self.strboard[event.widget.position[0]][event.widget.position[1]])
             pieceName = self.strboard[event.widget.position[0]][event.widget.position[1]] + " "
+
             if ["w", "b", " "].index(pieceName[0]) != self.turnColor:
                 return
             # This prevents the opponent from moving your pieces.
+            
             positions = self.find_moves(event.widget.position)
             if positions == None:
                 return
@@ -235,29 +280,28 @@ class ChessFrame(Frame):
                 print(self.wKingCastleQueenside)
                 print(self.wKingCastleKingside)
                 # So here I'm going to write code to handle the no castling in check move
+                print(self.is_check(1 - self.turnColor))
                 if self.is_check(1 - self.turnColor):
                     positions = self.find_moves(event.widget.position)
                 else:
+                    print(self.turnColor)
                     # So here I'm going to do checking to see if you can castle Kingside
                     currentCanCastleKingside = False
                     currentCanCastleQueenside = False
                     if self.turnColor == 0 and self.wKingCastleKingside:
                         # This will check to see if the squares are unoccupied
-                        for i in range(1, 3):
-                            print(self.validate_move(event.widget.position,
-                                                     [event.widget.position[0] + i, event.widget.position[1]]))
-                            if not (self.strboard[event.widget.position[0] + i][
-                                event.widget.position[1]]) and self.validate_move(event.widget.position,
-                                                                                  [event.widget.position[0] + i,
-                                                                                   event.widget.position[1]]):
+                        for i in range(1,3):
+                            print(self.validate_move(event.widget.position, [event.widget.position[0]+i, event.widget.position[1]]))
+                            if not(self.strboard[event.widget.position[0]+i][event.widget.position[1]]) and self.validate_move(event.widget.position, [event.widget.position[0]+i, event.widget.position[1]]):
                                 if i == 2:
                                     currentCanCastleKingside = True
                             else:
                                 break
                     if self.turnColor == 0 and self.wKingCastleQueenside:
                         # This will check to see if the squares are unoccupied
+                        print("hi")
                         for i in range(1, 3):
-                            if not (self.strboard[event.widget.position[0] - i][event.widget.position[1]]):
+                            if not(self.strboard[event.widget.position[0]-i][event.widget.position[1]]):
                                 if i == 2:
                                     currentCanCastleQueenside = True
                             else:
@@ -265,7 +309,7 @@ class ChessFrame(Frame):
                     if self.turnColor == 1 and self.bKingCastleQueenside:
                         # This will check to see if the squares are unoccupied
                         for i in range(1, 3):
-                            if not (self.strboard[event.widget.position[0] - i][event.widget.position[1]]):
+                            if not(self.strboard[event.widget.position[0]-i][event.widget.position[1]]):
                                 if i == 2:
                                     currentCanCastleQueenside = True
                             else:
@@ -274,16 +318,16 @@ class ChessFrame(Frame):
                     if self.turnColor == 1 and self.bKingCastleKingside:
                         # This will check to see if the squares are unoccupied
                         for i in range(1, 3):
-                            if not (self.strboard[event.widget.position[0] + i][event.widget.position[1]]):
+                            if not(self.strboard[event.widget.position[0]+i][event.widget.position[1]]):
                                 if i == 2:
                                     currentCanCastleKingside = True
                             else:
                                 break
 
-                    positions = self.find_moves(event.widget.position, castleKingside=currentCanCastleKingside,
-                                                castleQueenside=currentCanCastleQueenside)
+                    positions = self.find_moves(event.widget.position, castleKingside=currentCanCastleKingside, castleQueenside=currentCanCastleQueenside)
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position
+            self.pieceName = pieceName
 
             for i in positions:
                 if self.tkGrid.board[i[0]][i[1]]['bg'] == "green4":
@@ -347,13 +391,10 @@ class ChessFrame(Frame):
                 except (TypeError, IndexError):
                     pass
             else:
-                try:
-                    if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
-                        pass
-                    else:
-                        possible_moves.append([a, b + 1])
-                except (TypeError, IndexError):
+                if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
                     pass
+                else:
+                    possible_moves.append([a, b + 1])
                 try:
                     if "b" in self.strboard[a + 1][b + 1] and "b" in self.strboard[a - 1][b + 1]:
                         possible_moves.extend([[a + 1, b + 1], [a - 1, b + 1]])
@@ -609,6 +650,7 @@ chessFrame.pack()
 bob.mainloop()
 
 '''
+This is old code that I'm keeping here so that I can source from this.
 class ChessGame(Frame):
     def chessCallback(self, event):
         ls = list(event.position)

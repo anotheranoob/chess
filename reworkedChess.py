@@ -179,13 +179,14 @@ class ChessFrame(Frame):
         for i in range(8):
             for x in range(8):
                 pieceName = self.strboard[i][x]
-                # You don't need to check for castling because the no castling through check rule exists
-                possible_moves = []
-                for second in self.find_moves([i,x]):
-                    possible_moves.append([[i,x], z])
-                for move in possible_moves:
-                    if self.validante_move(move):
-                        return True
+                if ['w', 'b'].index((pieceName + " ")[0]) == color:
+                    # You don't need to check for castling because the no castling through check rule exists
+                    possible_moves = []
+                    for second in self.find_moves([i,x]):
+                        possible_moves.append([[i,x], z])
+                    for move in possible_moves:
+                        if self.validate_move(move):
+                            return True
         return False
     
     def is_check(self, color):
@@ -221,9 +222,7 @@ class ChessFrame(Frame):
                 self.pieceSelectedPosition = None
                 self.tkGrid.reset_bg()
                 return
-
-            # First we have to do handling for stalemate, castling, and checks WHICH ISN'T IMPLEMENTED YET
-            
+                
 
             # If this if statement returns true, that means it wasn't highlighted
             # as part of the valid moves before implementing check
@@ -260,6 +259,14 @@ class ChessFrame(Frame):
                 self.turnColor = 1 - self.turnColor
             else:
                 messagebox.showerror('Chess','Invalid Move',parent=self)
+            
+            # Now we have to do handling for stalemate and checks WHICH ISN'T IMPLEMENTED YET
+            if self.moves_exist(self.turnColor) == False:
+                if self.is_check(1-self.turnColor):
+                    messagebox.showinfo("Game Over, {} wins!".format(['w', 'b'][1-self.turnColor]))
+                else:
+                    messagebox.showinfo("Game Over, Stalemate")
+                self.destroy()
             return
         else:
             # print(self.strboard[event.widget.position[0]][event.widget.position[1]])
@@ -643,11 +650,10 @@ class ChessFrame(Frame):
                     possible_moves.append([a + i, b + x])
         return possible_moves
 
+bob = Tk(); bob.mainloop() # This might not be necessary, I will test this.
 
-bob = Tk()
 chessFrame = ChessFrame()
 chessFrame.pack()
-bob.mainloop()
 
 '''
 This is old code that I'm keeping here so that I can source from this.

@@ -164,7 +164,7 @@ class ChessFrame(Frame):
         self.bKingCastleQueenside = True
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
-
+        
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
         self.strboard = copy.deepcopy(board)
@@ -215,8 +215,16 @@ class ChessFrame(Frame):
         # print(self.strboard)
         return True
 
+    def exists_highlighted(self):
+        for i in range(8):
+            for x in range(8):
+                if self.tkGrid.board[i][x]['bg'] in ['red3', 'red4']:
+                    return True
+        return False
+
     def get_click(self, event):
         if self.isPieceSelected:
+            # This prevents enforcement of touch move rule
             if self.pieceSelectedPosition == event.widget.position:
                 self.isPieceSelected = False
                 self.pieceSelectedPosition = None
@@ -344,6 +352,13 @@ class ChessFrame(Frame):
                     self.tkGrid.board[i[0]][i[1]].config(bg="red3")
                 elif self.tkGrid.board[i[0]][i[1]]['bg'] == "antique white":
                     self.tkGrid.board[i[0]][i[1]].config(bg="red2")
+
+            # This will prevent misclicks on pieces from messing you up
+            if not (self.exists_highlighted()):
+                self.isPieceSelected = False
+                self.pieceSelectedPosition = None
+                self.tkGrid.reset_bg()
+                return
 
     def find_moves(self, pos, castleKingside=False, castleQueenside=False):
         pieceName = (self.strboard[pos[0]][pos[1]] + " ")[1:]

@@ -164,7 +164,7 @@ class ChessFrame(Frame):
         self.bKingCastleQueenside = True
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
-        
+
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
         self.strboard = copy.deepcopy(board)
@@ -218,7 +218,7 @@ class ChessFrame(Frame):
     def exists_highlighted(self):
         for i in range(8):
             for x in range(8):
-                if self.tkGrid.board[i][x]['bg'] in ['red3', 'red4']:
+                if self.tkGrid.board[i][x]['bg'] in ['red3', 'red2']:
                     return True
         return False
 

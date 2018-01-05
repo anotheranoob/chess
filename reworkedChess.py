@@ -164,6 +164,7 @@ class ChessFrame(Frame):
         self.bKingCastleQueenside = True
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
+        self.enPassant = None
 
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
@@ -230,7 +231,23 @@ class ChessFrame(Frame):
                 self.pieceSelectedPosition = None
                 self.tkGrid.reset_bg()
                 return
-
+            # print(self.pieceSelectedPosition[1], event.widget.position[1])
+            # The following code will handle allowing en passant.
+            if (self.pieceName)[1:] == "Pawn ":
+                if (self.pieceName + " ")[0] == "w" and self.pieceSelectedPosition[1] == 1 and event.widget.position[1] == 3:
+                    self.enPassant = event.widget.position
+                    # print("Success!")
+                elif self.pieceSelectedPosition[1] == 6 and event.widget.position[1] == 4:
+                    self.enPassant = event.widget.position
+                    # print("Success!")
+                else:
+                    self.enPassant = ''
+            
+            # This code will make sure that your piece gets taken when en passant is used
+            if self.strboard[event.widget.position[0]][event.widget.position[1]] == '':
+                self.strboard[event.widget.position[0]][event.widget.position[1]-1] = '' # This will have to be +- so then you have to do checking :(
+                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]].config(image=self.tkGrid.blanksquare)
+                self.enPassant = None
             # If this if statement returns true, that means it wasn't highlighted
             # as part of the valid moves before implementing check
             if not (self.tkGrid.board[event.widget.position[0]][event.widget.position[1]]['bg'] in ["red3",
@@ -343,10 +360,12 @@ class ChessFrame(Frame):
 
                     positions = self.find_moves(event.widget.position, castleKingside=currentCanCastleKingside,
                                                 castleQueenside=currentCanCastleQueenside)
+                    if type(self.enPassant) == str:
+                        pass
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position
             self.pieceName = pieceName
-
+            
             for i in positions:
                 if self.tkGrid.board[i[0]][i[1]]['bg'] == "green4":
                     self.tkGrid.board[i[0]][i[1]].config(bg="red3")

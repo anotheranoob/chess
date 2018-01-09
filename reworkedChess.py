@@ -9,8 +9,6 @@ CS111
 cs111.wellesley.edu/~cs111/archive/cs111_spring15/public_html/labs/lab12/tkintercolor.html
 Documentation of all tkinter color names
 
-
-
 ********************
 """
 
@@ -233,6 +231,12 @@ class ChessFrame(Frame):
                 return
             # print(self.pieceSelectedPosition[1], event.widget.position[1])
             # The following code will handle allowing en passant.
+            print(self.enPassant)
+            if self.pieceName[1:] == 'Pawn' and self.strboard[event.widget.position[0]][event.widget.position[1]] == '' and self.enPassant:
+                self.strboard[event.widget.position[0]][event.widget.position[1]+['w', 'b'].index(self.pieceName[0])-1] = '' # This will have to be +- so then you have to do checking :(
+                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]].config(image=self.tkGrid.blanksquare)
+                self.enPassant = None
+            
             if (self.pieceName)[1:] == "Pawn ":
                 if (self.pieceName + " ")[0] == "w" and self.pieceSelectedPosition[1] == 1 and event.widget.position[1] == 3:
                     self.enPassant = event.widget.position
@@ -241,13 +245,9 @@ class ChessFrame(Frame):
                     self.enPassant = event.widget.position
                     # print("Success!")
                 else:
-                    self.enPassant = ''
+                    self.enPassant = None
             
             # This code will make sure that your piece gets taken when en passant is used
-            if self.strboard[event.widget.position[0]][event.widget.position[1]] == '':
-                self.strboard[event.widget.position[0]][event.widget.position[1]-1] = '' # This will have to be +- so then you have to do checking :(
-                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]].config(image=self.tkGrid.blanksquare)
-                self.enPassant = None
             # If this if statement returns true, that means it wasn't highlighted
             # as part of the valid moves before implementing check
             if not (self.tkGrid.board[event.widget.position[0]][event.widget.position[1]]['bg'] in ["red3",
@@ -360,8 +360,13 @@ class ChessFrame(Frame):
 
                     positions = self.find_moves(event.widget.position, castleKingside=currentCanCastleKingside,
                                                 castleQueenside=currentCanCastleQueenside)
-                    if type(self.enPassant) == str:
-                        pass
+            if type(self.enPassant) == list:
+                # The logic I will use is that if the piece is of the oppositie color and they are
+                # right next to eachother, then I will add the en passant to positions.
+                print(event.widget.position, self.enPassant)
+                if event.widget.position[1] == self.enPassant[1] and abs(event.widget.position[0]-self.enPassant[0]) == 1:
+                    positions.append([self.enPassant[0], self.enPassant[1]+['b', 'w'].index(pieceName)])
+            
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position
             self.pieceName = pieceName

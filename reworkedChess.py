@@ -229,12 +229,17 @@ class ChessFrame(Frame):
                 self.pieceSelectedPosition = None
                 self.tkGrid.reset_bg()
                 return
+            # This prevents illegal moves
+            if not(self.validate_move(self.pieceSelectedPosition, event.widget.position)):
+                messagebox.showerror('Chess', 'Invalid Move', parent=self)
+                return
             # print(self.pieceSelectedPosition[1], event.widget.position[1])
             # The following code will handle allowing en passant.
             print(self.enPassant)
             if self.pieceName[1:] == 'Pawn' and self.strboard[event.widget.position[0]][event.widget.position[1]] == '' and self.enPassant:
-                self.strboard[event.widget.position[0]][event.widget.position[1]+['w', 'b'].index(self.pieceName[0])-1] = '' # This will have to be +- so then you have to do checking :(
-                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]].config(image=self.tkGrid.blanksquare)
+                self.strboard[event.widget.position[0]][event.widget.position[1]+['w', 'b'].index(self.pieceName[0])*2-1] = '' # This will have to be +- so then you have to do checking :(
+                self.do_move(self.piecePosition, event.widget.position)
+                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]+['w', 'b'].index(self.pieceName[0])*2-1].config(image=self.tkGrid.blanksquare)
                 self.enPassant = None
             
             if (self.pieceName)[1:] == "Pawn ":
@@ -273,16 +278,13 @@ class ChessFrame(Frame):
                 self.bKingCastleQueenside = False
 
             # Now we will do handling for valid/invalid moves
-            if self.validate_move(self.pieceSelectedPosition, event.widget.position):
-                # print("YAY")
-                self.do_move(self.pieceSelectedPosition, event.widget.position)
-                self.tkGrid.reset_bg()
-                self.isPieceSelected = False
-                self.pieceSelectedPosition = None
-                self.turnColor = 1 - self.turnColor
-            else:
-                messagebox.showerror('Chess', 'Invalid Move', parent=self)
-
+            # print("YAY")
+            self.do_move(self.pieceSelectedPosition, event.widget.position)
+            self.tkGrid.reset_bg()
+            self.isPieceSelected = False
+            self.pieceSelectedPosition = None
+            self.turnColor = 1 - self.turnColor
+            
             # Now we have to do handling for stalemate and checks
             if self.moves_exist(self.turnColor) == False:
                 if self.is_check(1 - self.turnColor):
@@ -365,7 +367,7 @@ class ChessFrame(Frame):
                 # right next to eachother, then I will add the en passant to positions.
                 print(event.widget.position, self.enPassant)
                 if event.widget.position[1] == self.enPassant[1] and abs(event.widget.position[0]-self.enPassant[0]) == 1:
-                    positions.append([self.enPassant[0], self.enPassant[1]+['b', 'w'].index(pieceName)])
+                    positions.append([self.enPassant[0], self.enPassant[1]+['b', 'w'].index(pieceName[0])])
             
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position

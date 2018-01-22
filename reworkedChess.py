@@ -143,8 +143,7 @@ class ChessGrid(Frame):
 
 class ChessFrame(Frame):
     def __init__(self):
-        self.master = Tk() # This is temporary, in the future I will make it so that you just use a master
-        Frame.__init__(self, self.master)
+        Frame.__init__(self)
         self.tkGrid = ChessGrid(self)
         self.tkGrid.pack()
         self.turnColor = 0
@@ -163,8 +162,6 @@ class ChessFrame(Frame):
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
         self.enPassant = None
-        self.pack()
-        self.master.mainloop()
         
 
     def update_board(self, board):
@@ -710,8 +707,10 @@ class ChessFrame(Frame):
                     possible_moves.append([a + i, b + x])
         return possible_moves
 
-
+something = Tk()
 chessFrame = ChessFrame()
+chessFrame.pack()
+something.mainloop()
 
 '''
 This is old code that I'm keeping here so that I can source from this.

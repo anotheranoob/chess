@@ -17,9 +17,9 @@ import copy
 
 
 class ChessPiece(Label):
-    def __init__(self, master, pieceName, pieceImage, position):
+    def __init__(self, master, pieceName, pieceImage, position, activated=True):
         Label.__init__(self, master, image=pieceImage, height=60, width=60)
-        self.bind("<Button-1>", self.master.master.get_click)
+        self.bind("<Button-1>", self.master.get_click)
         self.position = position
         self.pieceName = pieceName
         self.master = master
@@ -42,7 +42,6 @@ class ChessGrid(Frame):
         self.bknight = PhotoImage(file="b_knight.gif")
         self.bking = PhotoImage(file="b_king.gif")
         self.bqueen = PhotoImage(file="b_queen.gif")
-        self.red = PhotoImage(file="Red.gif")
         self.blanksquare = PhotoImage()
         self.board = [[None, None, None, None, None, None, None, None],
                       [None, None, None, None, None, None, None, None],
@@ -140,10 +139,44 @@ class ChessGrid(Frame):
                 self.board[i][x].config(bg="green4")
                 self.board[i + 1][x + 1].config(bg="green4")
 
+    def get_click(self):
+        self.master.get_click()
+
+
+class promotionMenu(Frame):
+    def __init__(self, color):
+        Frame.__init__(self)
+        self.pieceTypes = ['Rook', 'Knight', 'Queen', 'Bishop']
+        self.wpawn = PhotoImage(file="w_pawn.gif")
+        self.wrook = PhotoImage(file="w_rook.gif")
+        self.wbishop = PhotoImage(file="w_bishop.gif")
+        self.wknight = PhotoImage(file="w_knight.gif")
+        self.wking = PhotoImage(file="w_king.gif")
+        self.wqueen = PhotoImage(file="w_queen.gif")
+        self.bpawn = PhotoImage(file="b_pawn.gif")
+        self.brook = PhotoImage(file="b_rook.gif")
+        self.bbishop = PhotoImage(file="b_bishop.gif")
+        self.bknight = PhotoImage(file="b_knight.gif")
+        self.bking = PhotoImage(file="b_king.gif")
+        self.bqueen = PhotoImage(file="b_queen.gif")
+        self.pieceImages = [
+                            [PhotoImage(file="w_rook.gif"), PhotoImage(file="b_rook.gif")],
+                            [PhotoImage(file="w_knight.gif"), PhotoImage(file="b_knight.gif")],
+                            [PhotoImage(file="w_queen.gif"), PhotoImage(file="b_queen.gif")],
+                            [PhotoImage(file="w_bishop.gif"), PhotoImage(file="b_bishop.gif")]
+                            ]
+        self.pieces = []
+        for i in range(len(self.pieceTypes)):
+            self.pieces.append(ChessPiece(self, color + self.pieceTypes[i], self.pieceImages[i][['w', 'b'].index(color)], [i,0]))
+            self.pieces[i].grid(column=i)
+
+    def get_click(self, event):
+        print('MEMES')
+
 
 class ChessFrame(Frame):
-    def __init__(self):
-        Frame.__init__(self)
+    def __init__(self, master):
+        Frame.__init__(self, master=master)
         self.tkGrid = ChessGrid(self)
         self.tkGrid.pack()
         self.turnColor = 0
@@ -161,8 +194,7 @@ class ChessFrame(Frame):
         self.bKingCastleQueenside = True
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
-        self.enPassant = None
-        
+        self.enPassant = None       
 
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
@@ -707,10 +739,10 @@ class ChessFrame(Frame):
                     possible_moves.append([a + i, b + x])
         return possible_moves
 
-something = Tk()
-chessFrame = ChessFrame()
+root = Tk()
+chessFrame = ChessFrame(root)
 chessFrame.pack()
-something.mainloop()
+root.mainloop()
 
 '''
 This is old code that I'm keeping here so that I can source from this.

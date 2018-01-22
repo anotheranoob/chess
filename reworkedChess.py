@@ -14,7 +14,6 @@ Documentation of all tkinter color names
 
 from tkinter import *
 import copy
-from tkinter import messagebox
 
 
 class ChessPiece(Label):
@@ -144,7 +143,8 @@ class ChessGrid(Frame):
 
 class ChessFrame(Frame):
     def __init__(self):
-        Frame.__init__(self)
+        self.master = Tk() # This is temporary, in the future I will make it so that you just use a master
+        Frame.__init__(self, self.master)
         self.tkGrid = ChessGrid(self)
         self.tkGrid.pack()
         self.turnColor = 0
@@ -163,6 +163,9 @@ class ChessFrame(Frame):
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
         self.enPassant = None
+        self.pack()
+        self.master.mainloop()
+        
 
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
@@ -229,18 +232,41 @@ class ChessFrame(Frame):
                 self.pieceSelectedPosition = None
                 self.tkGrid.reset_bg()
                 return
+
             # This prevents illegal moves
             if not(self.validate_move(self.pieceSelectedPosition, event.widget.position)):
                 messagebox.showerror('Chess', 'Invalid Move', parent=self)
                 return
+
+            # If this if statement returns true, that means it wasn't highlighted
+            # as part of the valid moves before implementing check
+            if not (self.tkGrid.board[event.widget.position[0]][event.widget.position[1]]['bg'] in ["red3",
+                                                                                                    "red2"]):
+                messagebox.showerror('Chess', 'Invalid Move', parent=self)
+                # print("RIP")
+                return
+
             # print(self.pieceSelectedPosition[1], event.widget.position[1])
             # The following code will handle allowing en passant.
             print(self.enPassant)
-            if self.pieceName[1:] == 'Pawn' and self.strboard[event.widget.position[0]][event.widget.position[1]] == '' and self.enPassant:
-                self.strboard[event.widget.position[0]][event.widget.position[1]+['w', 'b'].index(self.pieceName[0])*2-1] = '' # This will have to be +- so then you have to do checking :(
-                self.do_move(self.piecePosition, event.widget.position)
-                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]+['w', 'b'].index(self.pieceName[0])*2-1].config(image=self.tkGrid.blanksquare)
+            print(event.widget.position)
+            print(self.enPassant)
+            if self.pieceName[1:] == 'Pawn ' and self.strboard[event.widget.position[0]][event.widget.position[1]] == '' and self.enPassant:
+                self.do_move(self.pieceSelectedPosition, event.widget.position)
+                self.strboard[event.widget.position[0]][event.widget.position[1]-['b', 'w'].index(self.pieceName[0])*2+1] = ''
+                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]-['b', 'w'].index(self.pieceName[0])*2+1].config(image=self.tkGrid.blanksquare)
                 self.enPassant = None
+                self.tkGrid.reset_bg()
+                self.isPieceSelected = False
+                self.pieceSelectedPosition = None
+                self.turnColor = 1 - self.turnColor
+                if self.moves_exist(self.turnColor) == False:
+                    if self.is_check(1 - self.turnColor):
+                        messagebox.showinfo("Chess", "Game Over, {} wins!".format(['white', 'black'][1 - self.turnColor]))
+                    else:
+                        messagebox.showinfo("Chess", "Game Over, Stalemate")
+                    self.destroy()
+                return
             
             if (self.pieceName)[1:] == "Pawn ":
                 if (self.pieceName + " ")[0] == "w" and self.pieceSelectedPosition[1] == 1 and event.widget.position[1] == 3:
@@ -251,15 +277,6 @@ class ChessFrame(Frame):
                     # print("Success!")
                 else:
                     self.enPassant = None
-            
-            # This code will make sure that your piece gets taken when en passant is used
-            # If this if statement returns true, that means it wasn't highlighted
-            # as part of the valid moves before implementing check
-            if not (self.tkGrid.board[event.widget.position[0]][event.widget.position[1]]['bg'] in ["red3",
-                                                                                                    "red2"]):
-                messagebox.showerror('Chess', 'Invalid Move', parent=self)
-                # print("RIP")
-                return
 
             # This will do handling for invalidating castling after king/rook has been moved
             if self.pieceName == "wKing ":
@@ -292,7 +309,6 @@ class ChessFrame(Frame):
                 else:
                     messagebox.showinfo("Chess", "Game Over, Stalemate")
                 self.destroy()
-            return
         else:
             # print(self.strboard[event.widget.position[0]][event.widget.position[1]])
             pieceName = self.strboard[event.widget.position[0]][event.widget.position[1]] + " "
@@ -367,7 +383,7 @@ class ChessFrame(Frame):
                 # right next to eachother, then I will add the en passant to positions.
                 print(event.widget.position, self.enPassant)
                 if event.widget.position[1] == self.enPassant[1] and abs(event.widget.position[0]-self.enPassant[0]) == 1:
-                    positions.append([self.enPassant[0], self.enPassant[1]+['b', 'w'].index(pieceName[0])])
+                    positions.append([self.enPassant[0], self.enPassant[1]+['b', 'w'].index(pieceName[0])*2-1])
             
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position
@@ -695,12 +711,8 @@ class ChessFrame(Frame):
         return possible_moves
 
 
-bob = Tk();
-
 chessFrame = ChessFrame()
-chessFrame.pack()
 
-bob.mainloop()  # This might not be necessary, I will test this.
 '''
 This is old code that I'm keeping here so that I can source from this.
 class ChessGame(Frame):

@@ -196,7 +196,7 @@ class ChessFrame(Frame):
         self.bKingCastleQueenside = True
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
-        self.enPassant = None       
+        self.enPassant = None
 
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
@@ -265,7 +265,7 @@ class ChessFrame(Frame):
                 return
 
             # This prevents illegal moves
-            if not(self.validate_move(self.pieceSelectedPosition, event.widget.position)):
+            if not (self.validate_move(self.pieceSelectedPosition, event.widget.position)):
                 messagebox.showerror('Chess', 'Invalid Move', parent=self)
                 return
 
@@ -279,10 +279,14 @@ class ChessFrame(Frame):
 
             # print(self.pieceSelectedPosition[1], event.widget.position[1])
             # The following code will handle allowing en passant.
-            if self.pieceName[1:] == 'Pawn ' and self.strboard[event.widget.position[0]][event.widget.position[1]] == '' and self.enPassant:
+            if self.pieceName[1:] == 'Pawn ' and self.strboard[event.widget.position[0]][
+                event.widget.position[1]] == '' and self.enPassant:
                 self.do_move(self.pieceSelectedPosition, event.widget.position)
-                self.strboard[event.widget.position[0]][event.widget.position[1]-['b', 'w'].index(self.pieceName[0])*2+1] = ''
-                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]-['b', 'w'].index(self.pieceName[0])*2+1].config(image=self.tkGrid.blanksquare)
+                self.strboard[event.widget.position[0]][
+                    event.widget.position[1] - ['b', 'w'].index(self.pieceName[0]) * 2 + 1] = ''
+                self.tkGrid.board[event.widget.position[0]][
+                    event.widget.position[1] - ['b', 'w'].index(self.pieceName[0]) * 2 + 1].config(
+                    image=self.tkGrid.blanksquare)
                 self.enPassant = None
                 self.tkGrid.reset_bg()
                 self.isPieceSelected = False
@@ -290,14 +294,16 @@ class ChessFrame(Frame):
                 self.turnColor = 1 - self.turnColor
                 if self.moves_exist(self.turnColor) == False:
                     if self.is_check(1 - self.turnColor):
-                        messagebox.showinfo("Chess", "Game Over, {} wins!".format(['white', 'black'][1 - self.turnColor]))
+                        messagebox.showinfo("Chess",
+                                            "Game Over, {} wins!".format(['white', 'black'][1 - self.turnColor]))
                     else:
                         messagebox.showinfo("Chess", "Game Over, Stalemate")
                     self.destroy()
                 return
-            
+
             if (self.pieceName)[1:] == "Pawn ":
-                if (self.pieceName + " ")[0] == "w" and self.pieceSelectedPosition[1] == 1 and event.widget.position[1] == 3:
+                if (self.pieceName + " ")[0] == "w" and self.pieceSelectedPosition[1] == 1 and event.widget.position[
+                    1] == 3:
                     self.enPassant = event.widget.position
                     # print("Success!")
                 elif self.pieceSelectedPosition[1] == 6 and event.widget.position[1] == 4:
@@ -308,12 +314,15 @@ class ChessFrame(Frame):
 
                 # Now that that is done, I will now do AUTO PROMOTION
                 if event.widget.position[1] == 7:
-                    self.tkGrid.board[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]].config(image=self.tkGrid.wqueen)
-                    self.strboard[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]] = self.pieceName[0] + 'Queen'
+                    self.tkGrid.board[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]].config(
+                        image=self.tkGrid.wqueen)
+                    self.strboard[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]] = self.pieceName[
+                                                                                                      0] + 'Queen'
                 if event.widget.position[1] == 0:
-                    self.tkGrid.board[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]].config(image=self.tkGrid.bqueen)
-                    self.strboard[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]] = self.pieceName[0] + 'Queen'
-                    
+                    self.tkGrid.board[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]].config(
+                        image=self.tkGrid.bqueen)
+                    self.strboard[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]] = self.pieceName[
+                                                                                                      0] + 'Queen'
 
             # This will do handling for invalidating castling after king/rook has been moved
             if self.pieceName == "wKing ":
@@ -338,7 +347,7 @@ class ChessFrame(Frame):
             self.isPieceSelected = False
             self.pieceSelectedPosition = None
             self.turnColor = 1 - self.turnColor
-            
+
             # Now we have to do handling for stalemate and checks
             if self.moves_exist(self.turnColor) == False:
                 if self.is_check(1 - self.turnColor):
@@ -419,13 +428,14 @@ class ChessFrame(Frame):
                 # The logic I will use is that if the piece is of the oppositie color and they are
                 # right next to eachother, then I will add the en passant to positions.
                 print(event.widget.position, self.enPassant)
-                if event.widget.position[1] == self.enPassant[1] and abs(event.widget.position[0]-self.enPassant[0]) == 1:
-                    positions.append([self.enPassant[0], self.enPassant[1]+['b', 'w'].index(pieceName[0])*2-1])
-            
+                if event.widget.position[1] == self.enPassant[1] and abs(
+                        event.widget.position[0] - self.enPassant[0]) == 1:
+                    positions.append([self.enPassant[0], self.enPassant[1] + ['b', 'w'].index(pieceName[0]) * 2 - 1])
+
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position
             self.pieceName = pieceName
-            
+
             for i in positions:
                 if self.tkGrid.board[i[0]][i[1]]['bg'] == "green4":
                     self.tkGrid.board[i[0]][i[1]].config(bg="red3")
@@ -749,6 +759,7 @@ class ChessFrame(Frame):
                         a + i < 0 or b + x < 0):
                     possible_moves.append([a + i, b + x])
         return possible_moves
+
 
 root = Tk()
 chessFrame = ChessFrame()

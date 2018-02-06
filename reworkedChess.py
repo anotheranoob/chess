@@ -30,6 +30,10 @@ class ChessGrid(Frame):
         Frame.__init__(self, master)
         self.bind("<Button-1>", self.flip)
         self.master = master
+        # This bit of code allows you to expand the window
+        for i in range(7):
+            self.columnconfigure(i, weight=1)
+            self.rowconfigure(i, weight=1)
         self.wpawn = PhotoImage(file="w_pawn.gif")
         self.wrook = PhotoImage(file="w_rook.gif")
         self.wbishop = PhotoImage(file="w_bishop.gif")
@@ -92,7 +96,7 @@ class ChessGrid(Frame):
                 self.board[i + 1][x + 1].config(bg="green4")
         self.turn = 0
 
-    def flip(self):
+    def flip(self, event):
         self.turn = 1 - self.turn
         if self.turn == 0:
             for i in range(8):
@@ -177,10 +181,11 @@ class promotionMenu(Frame):
 
 
 class ChessFrame(Frame):
-    def __init__(self):
-        Frame.__init__(self)
+    def __init__(self, master):
+        self.master = master
+        Frame.__init__(self, master)
         self.tkGrid = ChessGrid(self)
-        self.tkGrid.pack()
+        self.set_aspect(self.tkGrid, self, 1.0)
         self.turnColor = 0
         self.strboard = [['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook'],
                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
@@ -197,6 +202,32 @@ class ChessFrame(Frame):
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
         self.enPassant = None
+
+    def set_aspect(self, content_frame, pad_frame, aspect_ratio):
+        # a function which places a frame within a containing frame, and
+        # then forces the inner frame to keep a specific aspect ratio
+
+        def enforce_aspect_ratio(event):
+            # when the pad window resizes, fit the content into it,
+            # either by fixing the width or the height and then
+            # adjusting the height or width based on the aspect ratio.
+
+            # start by using the width as the controlling dimension
+            desired_width = event.width
+            desired_height = int(event.width / aspect_ratio)
+
+            # if the window is too tall to fit, use the height as
+            # the controlling dimension
+            if desired_height > event.height:
+                desired_height = event.height
+                desired_width = int(event.height * aspect_ratio)
+            desired_height=desired_height//10*10
+            desired_width=desired_width//10*10
+            # place the window, giving it an explicit size
+            content_frame.place(in_=pad_frame, x=0, y=0, 
+                width=desired_width, height=desired_height)
+
+        pad_frame.bind("<Configure>", enforce_aspect_ratio)
 
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
@@ -237,7 +268,7 @@ class ChessFrame(Frame):
     def validate_move(self, initial, second):
         # This function will work by creating another chessFrame that has the board with the move done, then it will
         # see whether or not it leaves your king in check or not.
-        validationBoard = ChessFrame()
+        validationBoard = ChessFrame(self.master)
         validationBoard.update_board(self.strboard)
         validationBoard.do_move(initial, second)
         validationBoard.turnColor = 1 - self.turnColor
@@ -762,8 +793,10 @@ class ChessFrame(Frame):
 
 
 root = Tk()
-chessFrame = ChessFrame()
-chessFrame.pack()
+root.rowconfigure(0, weight=1)
+root.columnconfigure(0, weight=1)
+chessFrame = ChessFrame(root)
+chessFrame.grid(row=0, column=0, sticky="nsew")
 root.mainloop()
 
 '''

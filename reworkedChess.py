@@ -19,10 +19,14 @@ import copy
 class ChessPiece(Label):
     def __init__(self, master, pieceName, pieceImage, position, activated=True):
         Label.__init__(self, master, image=pieceImage, height=60, width=60)
-        self.bind("<Button-1>", self.master.get_click)
+        self.bind('<Button-1>', self.master.get_click)
+        self.bind('<Configure>', self.resize_image)
         self.position = position
         self.pieceName = pieceName
         self.master = master
+    def resize_image(self, event):
+        print(event.height, event.width)
+        self.configure(height=event.height, width=event.width)
 
 
 class ChessGrid(Frame):
@@ -31,7 +35,7 @@ class ChessGrid(Frame):
         self.bind("<Button-1>", self.flip)
         self.master = master
         # This bit of code allows you to expand the window
-        for i in range(7):
+        for i in range(8):
             self.columnconfigure(i, weight=1)
             self.rowconfigure(i, weight=1)
         self.wpawn = PhotoImage(file="w_pawn.gif")
@@ -86,7 +90,7 @@ class ChessGrid(Frame):
         self.board[4][7] = ChessPiece(self, "bKing", self.bking, [4, 7])
         for i in range(8):
             for x in range(8):
-                self.board[i][x].grid(row=7 - x, column=i)
+                self.board[i][x].grid(row=7 - x, column=i, sticky="nsew")
         for i in self.board:
             for j in i:
                 j.config(bg="antique white")

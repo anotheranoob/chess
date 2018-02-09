@@ -13,6 +13,7 @@ Documentation of all tkinter color names
 """
 
 from tkinter import *
+from PIL import Image, ImageTk 
 import copy
 
 
@@ -25,8 +26,11 @@ class ChessPiece(Label):
         self.pieceName = pieceName
         self.master = master
     def resize_image(self, event):
-        print(event.height, event.width)
-        self.configure(height=event.height, width=event.width)
+        img = Image.open("image.gif")
+        img.resize((event.width, event.height))
+        tkimage = ImageTk.PhotoImage(img)
+        self.image = tkimage
+        self.config(image=self.image)
 
 
 class ChessGrid(Frame):

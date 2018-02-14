@@ -22,12 +22,15 @@ class ChessPiece(Label):
         Label.__init__(self, master, image=pieceImage, height=60, width=60)
         self.bind('<Button-1>', self.master.get_click)
         self.bind('<Configure>', self.resize_image)
+        self.img = pieceImage
         self.position = position
         self.pieceName = pieceName
         self.master = master
     def resize_image(self, event):
-        img = Image.open("image.gif")
-        img.resize((event.width, event.height))
+        if self.pieceName == '':
+            return
+        self.img = Image.open(self.pieceName[0]+'_'+self.pieceName[1:].lower()+".gif")
+        self.img = img.resize((event.width, event.height))
         tkimage = ImageTk.PhotoImage(img)
         self.image = tkimage
         self.config(image=self.image)

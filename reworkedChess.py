@@ -13,7 +13,7 @@ Documentation of all tkinter color names
 """
 
 from tkinter import *
-from PIL import Image, ImageTk 
+from PIL import Image, ImageTk
 import copy
 
 
@@ -22,18 +22,17 @@ class ChessPiece(Label):
         Label.__init__(self, master, image=pieceImage, height=60, width=60)
         self.bind('<Button-1>', self.master.get_click)
         self.bind('<Configure>', self.resize_image)
-        self.img = pieceImage
+        self.originalImg = pieceImage
         self.position = position
         self.pieceName = pieceName
         self.master = master
     def resize_image(self, event):
         if self.pieceName == '':
             return
-        self.img = Image.open(self.pieceName[0]+'_'+self.pieceName[1:].lower()+".gif")
-        self.img = img.resize((event.width, event.height))
-        tkimage = ImageTk.PhotoImage(img)
-        self.image = tkimage
-        self.config(image=self.image)
+        self.resizedImg = self.originalImg.thumbnail((event.width, event.height))
+        tkimage = ImageTk.PhotoImage(self.resizedImg)
+        self.resizedImg = tkimage
+        self.config(image=self.resizedImg)
 
 
 class ChessGrid(Frame):
@@ -45,18 +44,18 @@ class ChessGrid(Frame):
         for i in range(8):
             self.columnconfigure(i, weight=1)
             self.rowconfigure(i, weight=1)
-        self.wpawn = PhotoImage(file="w_pawn.gif")
-        self.wrook = PhotoImage(file="w_rook.gif")
-        self.wbishop = PhotoImage(file="w_bishop.gif")
-        self.wknight = PhotoImage(file="w_knight.gif")
-        self.wking = PhotoImage(file="w_king.gif")
-        self.wqueen = PhotoImage(file="w_queen.gif")
-        self.bpawn = PhotoImage(file="b_pawn.gif")
-        self.brook = PhotoImage(file="b_rook.gif")
-        self.bbishop = PhotoImage(file="b_bishop.gif")
-        self.bknight = PhotoImage(file="b_knight.gif")
-        self.bking = PhotoImage(file="b_king.gif")
-        self.bqueen = PhotoImage(file="b_queen.gif")
+        self.wpawn = ImageTk.PhotoImage(Image.open("w_pawn.png"))
+        self.wrook = ImageTk.PhotoImage(Image.open("w_rook.gif"))
+        self.wbishop = ImageTk.PhotoImage(Image.open("w_bishop.png"))
+        self.wknight = ImageTk.PhotoImage(Image.open("w_knight.png"))
+        self.wking = ImageTk.PhotoImage(Image.open("w_king.png"))
+        self.wqueen = ImageTk.PhotoImage(Image.open("w_queen.png"))
+        self.bpawn = ImageTk.PhotoImage(Image.open("b_pawn.png"))
+        self.brook = ImageTk.PhotoImage(Image.open("b_rook.png"))
+        self.bbishop = ImageTk.PhotoImage(Image.open("b_bishop.png"))
+        self.bknight = ImageTk.PhotoImage(Image.open("b_knight.png"))
+        self.bking = ImageTk.PhotoImage(Image.open("b_king.png"))
+        self.bqueen = ImageTk.PhotoImage(Image.open("b_queen.png"))
         self.blanksquare = PhotoImage()
         self.board = [[None, None, None, None, None, None, None, None],
                       [None, None, None, None, None, None, None, None],

@@ -26,13 +26,18 @@ class ChessPiece(Label):
         self.position = position
         self.pieceName = pieceName
         self.master = master
+        
+    '''
+    Doesn't work yet.
     def resize_image(self, event):
         if self.pieceName == '':
             return
-        self.resizedImg = self.originalImg.thumbnail((event.width, event.height))
+        self.resizedImg = self.originalImg
+        self.resizedImg.thumbnail((event.width, event.height))
         tkimage = ImageTk.PhotoImage(self.resizedImg)
         self.resizedImg = tkimage
         self.config(image=self.resizedImg)
+    '''
 
 
 class ChessGrid(Frame):
@@ -44,6 +49,33 @@ class ChessGrid(Frame):
         for i in range(8):
             self.columnconfigure(i, weight=1)
             self.rowconfigure(i, weight=1)
+                '''
+        pieceSize = (40, 40)
+        self._wpawn = Image.open("w_pawn.png").thumbnail(pieceSize)
+        self._wrook = Image.open("w_rook.png").thumbnail(pieceSize)
+        self._wbishop = Image.open("w_bishop.png").thumbnail(pieceSize)
+        self._wknight = Image.open("w_knight.png").thumbnail(pieceSize)
+        self._wking = Image.open("w_king.png").thumbnail(pieceSize)
+        self._wqueen = Image.open("w_queen.png").thumbnail(pieceSize)
+        self.wpawn = ImageTk.PhotoImage(self._wpawn)
+        self.wrook = ImageTk.PhotoImage(self._wrook)
+        self.wbishop = ImageTk.PhotoImage(self._wbishop)
+        self.wknight = ImageTk.PhotoImage(self._wknight)
+        self.wking = ImageTk.PhotoImage(self._wqueen)
+
+        self._bpawn = Image.open("b_pawn.png").thumbnail(pieceSize)
+        self._brook = Image.open("b_rook.png").thumbnail(pieceSize)
+        self._bbishop = Image.open("b_bishop.png").thumbnail(pieceSize)
+        self._bknight = Image.open("b_knight.png").thumbnail(pieceSize)
+        self._bking = Image.open("b_king.png").thumbnail(pieceSize)
+        self._bqueen = Image.open("b_queen.png").thumbnail(pieceSize)
+        self.bpawn = ImageTk.PhotoImage(self._bpawn)
+        self.brook = ImageTk.PhotoImage(self._brook)
+        self.bbishop = ImageTk.PhotoImage(self._bbishop)
+        self.bknight = ImageTk.PhotoImage(self._bknight)
+        self.bking = ImageTk.PhotoImage(self._bqueen)
+        '''
+        
         self.wpawn = ImageTk.PhotoImage(Image.open("w_pawn.png"))
         self.wrook = ImageTk.PhotoImage(Image.open("w_rook.gif"))
         self.wbishop = ImageTk.PhotoImage(Image.open("w_bishop.png"))

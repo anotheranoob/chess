@@ -1,6 +1,5 @@
 """
 Kevin Wu p6 r23
-NOTE: Micheal might use this as part of his project for his game sharing platform.
 
 ********************
 Sources
@@ -13,31 +12,17 @@ Documentation of all tkinter color names
 """
 
 from tkinter import *
-from PIL import Image, ImageTk
+from tkinter import messagebox
 import copy
 
 
 class ChessPiece(Label):
     def __init__(self, master, pieceName, pieceImage, position, activated=True):
         Label.__init__(self, master, image=pieceImage, height=60, width=60)
-        self.bind('<Button-1>', self.master.get_click)
-        self.bind('<Configure>', self.resize_image)
-        self.originalImg = pieceImage
+        self.bind("<Button-1>", self.master.get_click)
         self.position = position
         self.pieceName = pieceName
         self.master = master
-        
-    '''
-    Doesn't work yet.
-    def resize_image(self, event):
-        if self.pieceName == '':
-            return
-        self.resizedImg = self.originalImg
-        self.resizedImg.thumbnail((event.width, event.height))
-        tkimage = ImageTk.PhotoImage(self.resizedImg)
-        self.resizedImg = tkimage
-        self.config(image=self.resizedImg)
-    '''
 
 
 class ChessGrid(Frame):
@@ -45,49 +30,18 @@ class ChessGrid(Frame):
         Frame.__init__(self, master)
         self.bind("<Button-1>", self.flip)
         self.master = master
-        # This bit of code allows you to expand the window
-        for i in range(8):
-            self.columnconfigure(i, weight=1)
-            self.rowconfigure(i, weight=1)
-                '''
-        pieceSize = (40, 40)
-        self._wpawn = Image.open("w_pawn.png").thumbnail(pieceSize)
-        self._wrook = Image.open("w_rook.png").thumbnail(pieceSize)
-        self._wbishop = Image.open("w_bishop.png").thumbnail(pieceSize)
-        self._wknight = Image.open("w_knight.png").thumbnail(pieceSize)
-        self._wking = Image.open("w_king.png").thumbnail(pieceSize)
-        self._wqueen = Image.open("w_queen.png").thumbnail(pieceSize)
-        self.wpawn = ImageTk.PhotoImage(self._wpawn)
-        self.wrook = ImageTk.PhotoImage(self._wrook)
-        self.wbishop = ImageTk.PhotoImage(self._wbishop)
-        self.wknight = ImageTk.PhotoImage(self._wknight)
-        self.wking = ImageTk.PhotoImage(self._wqueen)
-
-        self._bpawn = Image.open("b_pawn.png").thumbnail(pieceSize)
-        self._brook = Image.open("b_rook.png").thumbnail(pieceSize)
-        self._bbishop = Image.open("b_bishop.png").thumbnail(pieceSize)
-        self._bknight = Image.open("b_knight.png").thumbnail(pieceSize)
-        self._bking = Image.open("b_king.png").thumbnail(pieceSize)
-        self._bqueen = Image.open("b_queen.png").thumbnail(pieceSize)
-        self.bpawn = ImageTk.PhotoImage(self._bpawn)
-        self.brook = ImageTk.PhotoImage(self._brook)
-        self.bbishop = ImageTk.PhotoImage(self._bbishop)
-        self.bknight = ImageTk.PhotoImage(self._bknight)
-        self.bking = ImageTk.PhotoImage(self._bqueen)
-        '''
-        
-        self.wpawn = ImageTk.PhotoImage(Image.open("w_pawn.png"))
-        self.wrook = ImageTk.PhotoImage(Image.open("w_rook.gif"))
-        self.wbishop = ImageTk.PhotoImage(Image.open("w_bishop.png"))
-        self.wknight = ImageTk.PhotoImage(Image.open("w_knight.png"))
-        self.wking = ImageTk.PhotoImage(Image.open("w_king.png"))
-        self.wqueen = ImageTk.PhotoImage(Image.open("w_queen.png"))
-        self.bpawn = ImageTk.PhotoImage(Image.open("b_pawn.png"))
-        self.brook = ImageTk.PhotoImage(Image.open("b_rook.png"))
-        self.bbishop = ImageTk.PhotoImage(Image.open("b_bishop.png"))
-        self.bknight = ImageTk.PhotoImage(Image.open("b_knight.png"))
-        self.bking = ImageTk.PhotoImage(Image.open("b_king.png"))
-        self.bqueen = ImageTk.PhotoImage(Image.open("b_queen.png"))
+        self.wpawn = PhotoImage(file="w_pawn.gif")
+        self.wrook = PhotoImage(file="w_rook.gif")
+        self.wbishop = PhotoImage(file="w_bishop.gif")
+        self.wknight = PhotoImage(file="w_knight.gif")
+        self.wking = PhotoImage(file="w_king.gif")
+        self.wqueen = PhotoImage(file="w_queen.gif")
+        self.bpawn = PhotoImage(file="b_pawn.gif")
+        self.brook = PhotoImage(file="b_rook.gif")
+        self.bbishop = PhotoImage(file="b_bishop.gif")
+        self.bknight = PhotoImage(file="b_knight.gif")
+        self.bking = PhotoImage(file="b_king.gif")
+        self.bqueen = PhotoImage(file="b_queen.gif")
         self.blanksquare = PhotoImage()
         self.board = [[None, None, None, None, None, None, None, None],
                       [None, None, None, None, None, None, None, None],
@@ -128,7 +82,7 @@ class ChessGrid(Frame):
         self.board[4][7] = ChessPiece(self, "bKing", self.bking, [4, 7])
         for i in range(8):
             for x in range(8):
-                self.board[i][x].grid(row=7 - x, column=i, sticky="nsew")
+                self.board[i][x].grid(row=7 - x, column=i)
         for i in self.board:
             for j in i:
                 j.config(bg="antique white")
@@ -138,7 +92,7 @@ class ChessGrid(Frame):
                 self.board[i + 1][x + 1].config(bg="green4")
         self.turn = 0
 
-    def flip(self, event):
+    def flip(self):
         self.turn = 1 - self.turn
         if self.turn == 0:
             for i in range(8):
@@ -223,11 +177,10 @@ class promotionMenu(Frame):
 
 
 class ChessFrame(Frame):
-    def __init__(self, master):
-        self.master = master
-        Frame.__init__(self, master)
+    def __init__(self):
+        Frame.__init__(self)
         self.tkGrid = ChessGrid(self)
-        self.set_aspect(self.tkGrid, self, 1.0)
+        self.tkGrid.pack()
         self.turnColor = 0
         self.strboard = [['wRook', 'wPawn', '', '', '', '', 'bPawn', 'bRook'],
                          ['wKnight', 'wPawn', '', '', '', '', 'bPawn', 'bKnight'],
@@ -243,33 +196,7 @@ class ChessFrame(Frame):
         self.bKingCastleQueenside = True
         self.bKingCastleKingside = True
         self.wKingCastleQueenside = True
-        self.enPassant = None
-
-    def set_aspect(self, content_frame, pad_frame, aspect_ratio):
-        # a function which places a frame within a containing frame, and
-        # then forces the inner frame to keep a specific aspect ratio
-
-        def enforce_aspect_ratio(event):
-            # when the pad window resizes, fit the content into it,
-            # either by fixing the width or the height and then
-            # adjusting the height or width based on the aspect ratio.
-
-            # start by using the width as the controlling dimension
-            desired_width = event.width
-            desired_height = int(event.width / aspect_ratio)
-
-            # if the window is too tall to fit, use the height as
-            # the controlling dimension
-            if desired_height > event.height:
-                desired_height = event.height
-                desired_width = int(event.height * aspect_ratio)
-            desired_height=desired_height//10*10
-            desired_width=desired_width//10*10
-            # place the window, giving it an explicit size
-            content_frame.place(in_=pad_frame, x=0, y=0, 
-                width=desired_width, height=desired_height)
-
-        pad_frame.bind("<Configure>", enforce_aspect_ratio)
+        self.enPassant = None       
 
     def update_board(self, board):
         # This function is also for validation and is similar to do_move
@@ -310,7 +237,7 @@ class ChessFrame(Frame):
     def validate_move(self, initial, second):
         # This function will work by creating another chessFrame that has the board with the move done, then it will
         # see whether or not it leaves your king in check or not.
-        validationBoard = ChessFrame(self.master)
+        validationBoard = ChessFrame()
         validationBoard.update_board(self.strboard)
         validationBoard.do_move(initial, second)
         validationBoard.turnColor = 1 - self.turnColor
@@ -338,7 +265,7 @@ class ChessFrame(Frame):
                 return
 
             # This prevents illegal moves
-            if not (self.validate_move(self.pieceSelectedPosition, event.widget.position)):
+            if not(self.validate_move(self.pieceSelectedPosition, event.widget.position)):
                 messagebox.showerror('Chess', 'Invalid Move', parent=self)
                 return
 
@@ -352,14 +279,13 @@ class ChessFrame(Frame):
 
             # print(self.pieceSelectedPosition[1], event.widget.position[1])
             # The following code will handle allowing en passant.
-            if self.pieceName[1:] == 'Pawn ' and self.strboard[event.widget.position[0]][
-                event.widget.position[1]] == '' and self.enPassant:
+            print(self.enPassant)
+            print(event.widget.position)
+            print(self.enPassant)
+            if self.pieceName[1:] == 'Pawn ' and self.strboard[event.widget.position[0]][event.widget.position[1]] == '' and self.enPassant:
                 self.do_move(self.pieceSelectedPosition, event.widget.position)
-                self.strboard[event.widget.position[0]][
-                    event.widget.position[1] - ['b', 'w'].index(self.pieceName[0]) * 2 + 1] = ''
-                self.tkGrid.board[event.widget.position[0]][
-                    event.widget.position[1] - ['b', 'w'].index(self.pieceName[0]) * 2 + 1].config(
-                    image=self.tkGrid.blanksquare)
+                self.strboard[event.widget.position[0]][event.widget.position[1]-['b', 'w'].index(self.pieceName[0])*2+1] = ''
+                self.tkGrid.board[event.widget.position[0]][event.widget.position[1]-['b', 'w'].index(self.pieceName[0])*2+1].config(image=self.tkGrid.blanksquare)
                 self.enPassant = None
                 self.tkGrid.reset_bg()
                 self.isPieceSelected = False
@@ -367,16 +293,14 @@ class ChessFrame(Frame):
                 self.turnColor = 1 - self.turnColor
                 if self.moves_exist(self.turnColor) == False:
                     if self.is_check(1 - self.turnColor):
-                        messagebox.showinfo("Chess",
-                                            "Game Over, {} wins!".format(['white', 'black'][1 - self.turnColor]))
+                        messagebox.showinfo("Chess", "Game Over, {} wins!".format(['white', 'black'][1 - self.turnColor]))
                     else:
                         messagebox.showinfo("Chess", "Game Over, Stalemate")
                     self.destroy()
                 return
-
+            
             if (self.pieceName)[1:] == "Pawn ":
-                if (self.pieceName + " ")[0] == "w" and self.pieceSelectedPosition[1] == 1 and event.widget.position[
-                    1] == 3:
+                if (self.pieceName + " ")[0] == "w" and self.pieceSelectedPosition[1] == 1 and event.widget.position[1] == 3:
                     self.enPassant = event.widget.position
                     # print("Success!")
                 elif self.pieceSelectedPosition[1] == 6 and event.widget.position[1] == 4:
@@ -384,18 +308,6 @@ class ChessFrame(Frame):
                     # print("Success!")
                 else:
                     self.enPassant = None
-
-                # Now that that is done, I will now do AUTO PROMOTION
-                if event.widget.position[1] == 7:
-                    self.tkGrid.board[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]].config(
-                        image=self.tkGrid.wqueen)
-                    self.strboard[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]] = self.pieceName[
-                                                                                                      0] + 'Queen'
-                if event.widget.position[1] == 0:
-                    self.tkGrid.board[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]].config(
-                        image=self.tkGrid.bqueen)
-                    self.strboard[self.pieceSelectedPosition[0]][self.pieceSelectedPosition[1]] = self.pieceName[
-                                                                                                      0] + 'Queen'
 
             # This will do handling for invalidating castling after king/rook has been moved
             if self.pieceName == "wKing ":
@@ -420,7 +332,7 @@ class ChessFrame(Frame):
             self.isPieceSelected = False
             self.pieceSelectedPosition = None
             self.turnColor = 1 - self.turnColor
-
+            
             # Now we have to do handling for stalemate and checks
             if self.moves_exist(self.turnColor) == False:
                 if self.is_check(1 - self.turnColor):
@@ -501,14 +413,13 @@ class ChessFrame(Frame):
                 # The logic I will use is that if the piece is of the oppositie color and they are
                 # right next to eachother, then I will add the en passant to positions.
                 print(event.widget.position, self.enPassant)
-                if event.widget.position[1] == self.enPassant[1] and abs(
-                        event.widget.position[0] - self.enPassant[0]) == 1:
-                    positions.append([self.enPassant[0], self.enPassant[1] + ['b', 'w'].index(pieceName[0]) * 2 - 1])
-
+                if event.widget.position[1] == self.enPassant[1] and abs(event.widget.position[0]-self.enPassant[0]) == 1:
+                    positions.append([self.enPassant[0], self.enPassant[1]+['b', 'w'].index(pieceName[0])*2-1])
+            
             self.isPieceSelected = True
             self.pieceSelectedPosition = event.widget.position
             self.pieceName = pieceName
-
+            
             for i in positions:
                 if self.tkGrid.board[i[0]][i[1]]['bg'] == "green4":
                     self.tkGrid.board[i[0]][i[1]].config(bg="red3")
@@ -578,13 +489,10 @@ class ChessFrame(Frame):
                 except (TypeError, IndexError):
                     pass
             else:
-                try:
-                    if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
-                        pass
-                    else:
-                        possible_moves.append([a, b + 1])
-                except (TypeError, IndexError):
+                if "b" in self.strboard[a][b + 1] or "w" in self.strboard[a][b + 1]:
                     pass
+                else:
+                    possible_moves.append([a, b + 1])
                 try:
                     if "b" in self.strboard[a + 1][b + 1] and "b" in self.strboard[a - 1][b + 1]:
                         possible_moves.extend([[a + 1, b + 1], [a - 1, b + 1]])
@@ -833,12 +741,9 @@ class ChessFrame(Frame):
                     possible_moves.append([a + i, b + x])
         return possible_moves
 
-
 root = Tk()
-root.rowconfigure(0, weight=1)
-root.columnconfigure(0, weight=1)
-chessFrame = ChessFrame(root)
-chessFrame.grid(row=0, column=0, sticky="nsew")
+chessFrame = ChessFrame()
+chessFrame.pack()
 root.mainloop()
 
 '''
